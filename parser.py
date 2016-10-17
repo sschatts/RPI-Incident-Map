@@ -1,21 +1,20 @@
 import urllib2, sys, subprocess, os, datetime
 
-#gs -sDEVICE=txtwrite -o output.txt 2015.pdf
+date_format = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 
 def main():
-    	download_file("http://www.rpi.edu/dept/public_safety/blotter/{ab}_16.pdf".format(ab = datetime.datetime.now().strftime("%b").upper()))
+    	download_file("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = date_format))
     	parse_file()
 
 def download_file(download_url):
     response = urllib2.urlopen(download_url)
-    file = open("document.pdf", 'wb')
+    file = open("{fn}.pdf".format(fn = date_format), 'wb')
     file.write(response.read())
     file.close()
     print("Completed")
 
 def parse_file():
-	#args = ['gs', '-dSAFER', '-dNOPAUSE', '-dBATCH', '-sDEVICE=txtwrite', '-sOutputFile=output.txt', 'document.pdf']
-	#output = Popen(args, stdout = sys.stdout, stderr = sys.stderr)
-	os.system('gs -sDEVICE=txtwrite -o ./output.txt ./document.pdf 1> /dev/null')
+	os.system('gs -sDEVICE=txtwrite -o ./output.txt ./{fn}.pdf 1> /dev/null'.format(fn = date_format))
+
 if __name__ == "__main__":
     main()
