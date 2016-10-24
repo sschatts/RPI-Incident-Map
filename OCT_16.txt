@@ -1,7 +1,7 @@
                               Rensselaer Polytechnic Institute
                                Department of Public Safety
                              Student Right To Know CAD Daily Log
-                             From Oct 01, 2016 to Oct 12, 2016.
+                             From Oct 01, 2016 to Oct 18, 2016.
    date reported:10/01/16 - SAT at 03:22 location :CAMPUS PARKING, WEST LOT event #:16-10-01-020589
    date and time occurred from - occurred to:10/01/16 - SAT at 03:23 - 10/01/16 - SAT at 03:23
    incident :CRIMINAL-NYSPL - CRIMINAL MISCHIEF           report #:160580
@@ -54,11 +54,11 @@
    date and time occurred from - occurred to:10/06/16 - THU at 10:18 - 10/06/16 - THU at 10:24
    incident : - Fire Alarm Activation                     report #:160594
    disposition: :FIRE REPORT COMPLETED
-                                      print date and time10/13/2016  7:49:28AMat page no.1
+                                      print date and time10/19/2016  7:51:36AMat page no.1
                               Rensselaer Polytechnic Institute
                                Department of Public Safety
                              Student Right To Know CAD Daily Log
-                             From Oct 01, 2016 to Oct 12, 2016.
+                             From Oct 01, 2016 to Oct 18, 2016.
    date reported:10/06/16 - THU at 12:05 location :BURDETT AVENUE RESIDENCE event #:16-10-06-021058
    date and time occurred from - occurred to:10/06/16 - THU at 12:05 - 10/06/16 - THU at 12:14
    incident : - Fire Alarm Activation                     report #:160595
@@ -111,14 +111,71 @@
    date and time occurred from - occurred to:
    incident : - Fire Alarm Activation                     report #:160613
    disposition: :COMPLETED
-                                      print date and time10/13/2016  7:49:28AMat page no.2
+                                      print date and time10/19/2016  7:51:36AMat page no.2
                               Rensselaer Polytechnic Institute
                                Department of Public Safety
                              Student Right To Know CAD Daily Log
-                             From Oct 01, 2016 to Oct 12, 2016.
+                             From Oct 01, 2016 to Oct 18, 2016.
    date reported:10/12/16 - WED at 09:26 location :       event #:16-10-12-021545
    date and time occurred from - occurred to:
    incident : - Fire Alarm Activation                     report #:
    disposition: :COMPLETED
-              27 incidents listed.
-                                      print date and time10/13/2016  7:49:28AMat page no.3
+   date reported:10/13/16 - THU at 00:38 location :BARTON HALL event #:16-10-13-021597
+   date and time occurred from - occurred to:10/13/16 - THU at 00:38 - 10/13/16 - THU at 00:53
+   incident :INVESTIGATION - Medical incident/EMS         report #:160617
+   disposition: :MEDICAL REPORT FILED
+   date reported:10/13/16 - THU at 10:16 location :ACADEMY HALL event #:16-10-13-021635
+   date and time occurred from - occurred to:10/13/16 - THU at 10:16 - 10/13/16 - THU at 10:21
+   incident : - Fire Alarm Activation                     report #:160618
+   disposition: :FIRE REPORT COMPLETED
+   date reported:10/14/16 - FRI at 16:04 location :BEMAN LANE event #:16-10-14-021730
+   date and time occurred from - occurred to:
+   incident :FIRE - FIRE ALARM/SMOKE CONDITION I.E. COOKING report #:160620
+   disposition: :COMPLETED
+   date reported:10/14/16 - FRI at 20:24 location :MUELLER CENTER event #:16-10-14-021742
+   date and time occurred from - occurred to:
+   incident :CRIMINAL-NYSPL - STOLEN PROPERTY/POSSESSION OF report #:160621
+   disposition: :COMPLETED
+   date reported:10/15/16 - SAT at 00:50 location :COGSWELL LABORATORY event #:16-10-15-021765
+   date and time occurred from - occurred to:
+   incident :CRIMINAL-NYSPL - ALL OTHER OFFENSES          report #:
+   disposition: :COMPLETED
+   date reported:10/15/16 - SAT at 13:37 location :GYMNASIUM, '87 event #:16-10-15-021799
+   date and time occurred from - occurred to:10/15/16 - SAT at 13:38 - 10/15/16 - SAT at 13:45
+   incident :INVESTIGATION - Medical incident/EMS         report #:160622
+   disposition: :MEDICAL REPORT FILED
+   date reported:10/16/16 - SUN at 15:19 location :CAMPUS PARKING, NORTH LOT event #:16-10-16-021885
+   date and time occurred from - occurred to:
+   incident :INVESTIGATION - Medical incident/EMS         report #:160623
+   disposition: :MEDICAL REPORT FILED
+   date reported:10/16/16 - SUN at 16:49 location :STACWYCK - MCGIFFERT event #:16-10-16-021892
+   date and time occurred from - occurred to:
+   incident :CRIMINAL-NYSPL-LARC - ALL OTHERS             report #:160624
+   disposition: :COMPLETED
+   date reported:10/17/16 - MON at 09:54 location :QUADRANGLE DORMS event #:16-10-17-021969
+   date and time occurred from - occurred to:10/17/16 - MON at 09:54 - 10/17/16 - MON at 10:08
+   incident : - Fire Alarm Activation                     report #:160625
+   disposition: :FIRE REPORT COMPLETED
+   date reported:10/17/16 - MON at 14:17 location :JONSSON ENGINEERING CENTE event #:16-10-17-021981
+   date and time occurred from - occurred to:10/17/16 - MON at 14:17 - 10/17/16 - MON at 14:38
+   incident :INVESTIGATION - Medical incident/EMS         report #:160626
+   disposition: :MEDICAL REPORT FILED
+   date reported:10/17/16 - MON at 19:23 location :POLYTECH APARTMENTS event #:16-10-17-022005
+   date and time occurred from - occurred to:
+   incident : - Fire Alarm Activation                     report #:160627
+   disposition: :COMPLETED
+   date reported:10/18/16 - TUE at 06:17 location :H- BUILDING event #:16-10-18-022035
+   date and time occurred from - occurred to:
+   incident :INVESTIGATION - PROPERTY DAMAGE AUTO ACCIDENT report #:
+   disposition: :COMPLETED
+                                      print date and time10/19/2016  7:51:36AMat page no.3
+                              Rensselaer Polytechnic Institute
+                               Department of Public Safety
+                             Student Right To Know CAD Daily Log
+                             From Oct 01, 2016 to Oct 18, 2016.
+   date reported:10/18/16 - TUE at 18:12 location :BURDETT AVENUE RESIDENCE event #:16-10-18-022078
+   date and time occurred from - occurred to:
+   incident : - Fire Alarm Activation                     report #:
+   disposition: :COMPLETED
+              40 incidents listed.
+                                      print date and time10/19/2016  7:51:36AMat page no.4
