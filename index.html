@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> <!--Raleway Font link-->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <div id='map'></div>
+        <div id='title_box'>
+            <div id='title_box_words'>
+                <h1>RPI Incident Map</h1>
+                <h5>Visualization of the Incidents Reported to Public Safety<h5>
+            </div>      
+        </div> <!-- title_box -->
+        <div id='filter_box'>
+            <div id='filter_box_words'>
+                <h2>Filters</h2>
+                <div class='selection'>
+                    <p>Location</p>
+                    <div class='arrow_down'></div>
+                </div>
+                <div class='selection'>
+                    <p> Date Range </p>
+                    <div class='arrow_down'></div>
+                </div>
+            </div> <!-- filter_box_words -->
+        </div> <!-- filter_box -->
+    </div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: [-73.676,42.730],
+        zoom: 13.8,
+        maxZoom: 17.5,
+        minZoom: 13.7
+    });
+
+    map.on('load', function () {
+        map.addSource("points", {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-73.677,42.730]
+                    },
+                    "properties": {
+                        "icon": "monument"
+                    }
+                }]
+            }
+        });
+
+        map.addLayer({
+            "id": "points",
+            "type": "symbol",
+            "source": "points",
+            "layout": {
+                "icon-image": "{icon}-15",
+                "text-field": "{title}",
+                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                "text-offset": [0, 0.6],
+                "text-anchor": "top"
+            }
+        });
+    });
+
+    </script>
+
+</body>
+</html>
