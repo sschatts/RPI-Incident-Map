@@ -1,5 +1,6 @@
 import urllib2, sys, subprocess, os, datetime, re
 from pymongo import MongoClient
+from mapbox import Geocoder
 
 __date_format = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 __connection = MongoClient()
@@ -15,9 +16,9 @@ def download_and_convert_file(download_url):
 
     os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __date_format))
 
-    print("Completed")
+    #print("Completed")
 
-def parse_text():
+def create_database():
 	file = open("{fn}.txt".format(fn = __date_format), 'r')
 	report_num = []; date_reported = []; location = []; event_num = []; datetime_fromto = []; incident = [];  report_num = []; disposition = []
 
@@ -59,13 +60,20 @@ def parse_text():
 			report_num = report_num.replace('report #:','').strip()
 			disposition = disposition.replace('disposition: :','').strip()
 
+			geocoder = Geocoder(access_token='pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw')
+			response = geocoder.forward("{loc}, Troy, New York 12180, United States".format(loc = location))
+			first = response.geojson()['features'][0]
+			coords = [first['geometry']['coordinates'][1], first['geometry']['coordinates'][0]]
+			print coords
+
 			post = {"date reported": date_reported,
 					 "location": location,
 					 "event #": event_num,
 					 "date and time occurred from to occurred to": datetime_fromto,
 					 "incident": incident,
 					 "report #": report_num,
-					 "disposition": disposition}
+					 "disposition": disposition,
+					 "coordinates": coords}
 			__posts.insert(post)
 
 			# print repr(date_reported)
@@ -76,12 +84,9 @@ def parse_text():
 			# print repr(report_num)
 			# print repr(disposition)
 
-
-
-
 def main():
     	download_and_convert_file("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __date_format))
-    	parse_text()
+    	create_database()
 
     	# for post in __posts.find():
     	# 	print post
