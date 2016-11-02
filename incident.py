@@ -2,6 +2,10 @@ import urllib2, sys, subprocess, os, datetime, re
 from pymongo import MongoClient
 from mapbox import Geocoder
 
+#TODO: How to make this work with multiple PDFs
+#TODO: Add to the database instead of recreate it every time
+#TODO: Have this run continuously instead of just once
+
 __date_format = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 __connection = MongoClient()
 __db = __connection['incident-db']
@@ -20,7 +24,7 @@ def download_and_convert_file(download_url):
 
 def create_database():
 	file = open("{fn}.txt".format(fn = __date_format), 'r')
-	report_num = []; date_reported = []; location = []; event_num = []; datetime_fromto = []; incident = [];  report_num = []; disposition = []
+	report_num = []; date_reported = []; location = []; event_num = []; datetime_fromto = []; incident = [];  report_num = []; disposition = [];
 
 	for line in file:
 		if re.findall(r'date reported:.* (?=location)', line):
@@ -64,7 +68,7 @@ def create_database():
 			response = geocoder.forward("{loc}, Troy, New York 12180, United States".format(loc = location))
 			first = response.geojson()['features'][0]
 			coords = [first['geometry']['coordinates'][1], first['geometry']['coordinates'][0]]
-			print coords
+			#print coords
 
 			post = {"date reported": date_reported,
 					 "location": location,
