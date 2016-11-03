@@ -33,7 +33,7 @@ def html_clean():
 				#print line
 				line = line.replace('&lt;br&gt;', '<br />')
 			f.write(line + '\n')
-		
+	f.close()
 	#for line in txt:
 	#	print line
 
