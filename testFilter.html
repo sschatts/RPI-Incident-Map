@@ -71,7 +71,8 @@ var places = {
     "features": [{
         "type": "Feature",
         "properties": {
-            "icon": "theatre"
+            "Title": "Mischief",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -80,7 +81,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "theatre"
+            "Title": "Mischief",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -89,7 +91,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "bar"
+            "Title": "Fire Alarm",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -98,7 +101,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "bicycle"
+            "Title": "Assault",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -107,7 +111,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "music"
+            "Title": "Harassment",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -116,7 +121,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "music"
+            "Title": "Harassment",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -125,7 +131,8 @@ var places = {
     }, {
         "type": "Feature",
         "properties": {
-            "icon": "music"
+            "Title": "Harassment",
+			"icon": "bicycle"
         },
         "geometry": {
             "type": "Point",
@@ -156,7 +163,8 @@ map.on('load', function() {
 
     places.features.forEach(function(feature) {
         var symbol = feature.properties['icon'];
-        var layerID = 'poi-' + symbol;
+		var title = feature.properties['Title'];
+        var layerID = 'poi-' + title;
 
         // Add a layer for this symbol type if it hasn't been added already.
         if (!map.getLayer(layerID)) {
@@ -168,7 +176,7 @@ map.on('load', function() {
                     "icon-image": symbol + "-15",
                     "icon-allow-overlap": true
                 },
-                "filter": ["==", "icon", symbol]
+                "filter": ["==", "icon", title]
             });
 
             // Add checkbox and label elements for the layer.
@@ -180,7 +188,7 @@ map.on('load', function() {
 
             var label = document.createElement('label');
             label.setAttribute('for', layerID);
-            label.textContent = symbol;
+            label.textContent = title;
             filterGroup.appendChild(label);
 
             // When the checkbox changes, update the visibility of the layer.
