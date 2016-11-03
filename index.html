@@ -12,24 +12,50 @@
             <div id='title_box'>
                 <div id='title_box_words'>
                     <h1>RPI Incident Map</h1>
-                    <h5>Visualization of the Incidents Reported to Public Safety<h5>
+                    <h5>Visualization of the Incidents Reported to Public Safety</h5>
                 </div>   <!-- title_box_words -->   
             </div> <!-- title_box -->
             <div id='filter_box'>
                 <div id='filter_box_words'>
                     <h2>Filters</h2>
-                    <div class='selection'>
-                        <p>Location</p>
-                        <div class='arrow_down'></div>
+                    <div class="white_back">
+                        <p onclick="openNav()" class="dropbtn">Locations</p>
+                        <p onclick="openNav2()" class="dropbtn">Date Range</p>
                     </div>
-                    <div class='selection'>
-                        <p> Date Range </p>
-                        <div class='arrow_down'></div>
+                    <div id="myNav" class="overlay">
+                        <!-- Button to close the overlay navigation -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+                        <!-- Overlay content -->
+                        <div class="overlay-content">
+                            <a href="#">Amos Eaten</a>
+                            <a href="#">Barton</a>
+                            <a href="#">BAR-H</a>
+                            <a href="#">City Station</a>
+                            <a href="#">Lally</a>
+                            <a href="#">Student Union</a>
+                        </div>
                     </div>
+
+                    <div id="myNav2" class="overlay">
+                        <!-- Button to close the overlay navigation -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav2()">&times;</a>
+
+                        <!-- Overlay content -->
+                        <div class="overlay-content2">
+                            <a href="#">Date</a>
+                            <a href="#">Month</a>
+                            <a href="#">Year</a>
+                        </div>
+                    </div>
+                    
+
                 </div> <!-- filter_box_words -->
             </div> <!-- filter_box -->
         </div>
         <script>
+
+
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw';
         var map = new mapboxgl.Map({
             container: 'map',
@@ -71,6 +97,24 @@
                 }
             });
         });
+
+        function openNav() {
+            document.getElementById("myNav").style.width = "100%";
+        }
+
+        /* Close when someone clicks on the "x" symbol inside the overlay */
+        function closeNav() {
+            document.getElementById("myNav").style.width = "0%";
+        }
+
+        function openNav2() {
+            document.getElementById("myNav2").style.width = "100%";
+        }
+
+        /* Close when someone clicks on the "x" symbol inside the overlay */
+        function closeNav2() {
+            document.getElementById("myNav2").style.width = "0%";
+        }
 
         </script>
 
