@@ -14,6 +14,11 @@
 <body>
 
 <style>
+	.mapboxgl-popup {
+        max-width: 400px;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+	
     .filter-group {
         font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
         font-weight: 600;
@@ -64,6 +69,7 @@
 </style>
 <div id='map'></div>
 <nav id='filter-group' class='filter-group'></nav>
+
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiaHVhbmdsNiIsImEiOiJjaXVlODQ5em4wMGIzMnRsN3AxeTh1OW5lIn0.b2Eyc5aBBJdncxRwtM5rJQ';
 var places = {
@@ -71,72 +77,87 @@ var places = {
     "features": [{
         "type": "Feature",
         "properties": {
-            "Title": "Mischief",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "fire-station-15",
+			"description": "xd",
+			"cat": "fire"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.6750785,42.7274038]
+            "coordinates": [-77.038659, 38.931567]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Mischief",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "fire-station-15",
+			"description": "xd",
+			"cat": "fire"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.673448,42.727632]
+            "coordinates": [-77.003168, 38.894651]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Fire Alarm",
-			"icon": "bicycle"
+			"custom": "true",
+            'icon': 'dog-park-15',
+			"description": "ey b0ss",
+			"cat": "assault"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.69178509999999,42.7284117]
+            "coordinates": [-77.090372, 38.881189]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Assault",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "rocket-15",
+			"description": "someone stole my bike",
+			"cat": "larceny"
+			
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.6831504,42.7316975]
+            "coordinates": [-77.052477, 38.943951]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Harassment",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "alcohol-shop-15",
+			"description": "xd",
+			"cat": "mischief"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.664531,42.7350426]
+            "coordinates": [-77.031706, 38.914581]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Harassment",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "alcohol-shop-15",
+			"description": "xd",
+			"cat": "mischief"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.6712814,42.7310282]
+            "coordinates": [-77.020945, 38.878241]
         }
     }, {
         "type": "Feature",
         "properties": {
-            "Title": "Harassment",
-			"icon": "bicycle"
+			"custom": "false",
+            "icon": "alcohol-shop-15",
+			"description": "xd",
+			"cat": "mischief"
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [-73.67328289999999,42.7282523]
+            "coordinates": [-77.007481, 38.876516]
         }
     }]
 };
@@ -144,13 +165,11 @@ var places = {
 var filterGroup = document.getElementById('filter-group');
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v9',
-    center: [-73.676,42.730],
-    zoom: 13.8,
-    maxZoom: 17.5,
-    minZoom: 13.7
+    style: 'mapbox://styles/mapbox/streets-v10',
+    center: [-77.04, 38.907],
+    zoom: 11.15
 });
-
+var aLayers = []; //list of layers
 
 
 map.on('load', function() {
@@ -160,44 +179,65 @@ map.on('load', function() {
         "data": places
     });
 	
-
     places.features.forEach(function(feature) {
         var symbol = feature.properties['icon'];
-		var title = feature.properties['Title'];
-        var layerID = 'poi-' + title;
-
+		var abc = feature.properties['cat'];
+        var layerID = 'poi-' + abc;
         // Add a layer for this symbol type if it hasn't been added already.
-        if (!map.getLayer(layerID)) {
-            map.addLayer({
-                "id": layerID,
-                "type": "symbol",
-                "source": "places",
-                "layout": {
-                    "icon-image": symbol + "-15",
-                    "icon-allow-overlap": true
-                },
-                "filter": ["==", "icon", title]
-            });
+		if (!map.getLayer(layerID)) {
+			aLayers.push(layerID);
+			map.addLayer({
+				"id": layerID,
+				"type": "symbol",
+				"source": "places",
+				"layout": {
+					"icon-image": symbol,
+					"icon-allow-overlap": true
+				},
+				"filter": ["==", "icon", symbol]
+			});
 
-            // Add checkbox and label elements for the layer.
-            var input = document.createElement('input');
-            input.type = 'checkbox';
-            input.id = layerID;
-            input.checked = true;
-            filterGroup.appendChild(input);
+			// Add checkbox and label elements for the layer.
+			var input = document.createElement('input');
+			input.type = 'checkbox';
+			input.id = layerID;
+			input.checked = true;
+			filterGroup.appendChild(input);
 
-            var label = document.createElement('label');
-            label.setAttribute('for', layerID);
-            label.textContent = title;
-            filterGroup.appendChild(label);
+			var label = document.createElement('label');
+			label.setAttribute('for', layerID);
+			label.textContent = abc;
+			filterGroup.appendChild(label);
 
-            // When the checkbox changes, update the visibility of the layer.
-            input.addEventListener('change', function(e) {
-                map.setLayoutProperty(layerID, 'visibility',
-                    e.target.checked ? 'visible' : 'none');
-            });
-        }
+			// When the checkbox changes, update the visibility of the layer.
+			input.addEventListener('change', function(e) {
+				map.setLayoutProperty(layerID, 'visibility',
+					e.target.checked ? 'visible' : 'none');
+			});
+		}
     });
+});
+
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point, { layers: aLayers });
+
+    if (!features.length) {
+        return;
+    }
+
+    var feature = features[0];
+
+    // Populate the popup and set its coordinates
+    // based on the feature found.
+    var popup = new mapboxgl.Popup()
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(feature.properties.description)
+        .addTo(map);
+});
+
+map.on('mousemove', function (e) {
+    var features = map.queryRenderedFeatures(e.point, { layers: aLayers });
+    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
 });
 </script>
 
