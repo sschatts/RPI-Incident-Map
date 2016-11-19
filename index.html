@@ -8,54 +8,85 @@
     </head>
     <body>
         <div>
+            <!--The ID 'map' is used below to load the map-->
             <div id='map'></div>
-            <div id='title_box'>
-                <div id='title_box_words'>
+            <!-- Information that is in the Title box in the top left corner -->
+            <div id='titleBox'>
+                <div id='titleBoxWords'>
                     <h1>RPI Incident Map</h1>
                     <h5>Visualization of the Incidents Reported to Public Safety</h5>
-                </div>   <!-- title_box_words -->   
-            </div> <!-- title_box -->
-            <div id='filter_box'>
-                <div id='filter_box_words'>
-                    <h2>Filters</h2>
-                    <div class="white_back">
-                        <p onclick="openNav()" class="dropbtn">Locations</p>
-                        <p onclick="openNav2()" class="dropbtn">Date Range</p>
+                </div>   <!-- close div titleBoxWords -->   
+            </div> <!-- close div titleBox -->
+            <!-- Information that is in the filter box across the bottom of the screen -->
+            <div id='filterBox'>
+                <div id='filterBoxWords'>
+                    <h2>Filter Options:</h2>
+                    <!--Specific filter option -->
+                    <!-- the openNav function open the options for each filter type-->
+                    <div class='filterOptions'>
+                        <p onclick="openNavLocation()" class="overlaybutton">Select Location</p>
+                        <p onclick="openNavType()" class="overlaybutton">Select Type of Incident</p>
+                        <p onclick="openNavDate()" class="overlaybutton">Select Month</p>
                     </div>
-                    <div id="myNav" class="overlay">
-                        <!-- Button to close the overlay navigation -->
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <!-- Information for the Location options overlay -->
+                    <div id="myNavLocation" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavLocation()">&times;</a>
 
-                        <!-- Overlay content -->
-                        <div class="overlay-content">
-                            <a href="#">Amos Eaten</a>
-                            <a href="#">Barton</a>
-                            <a href="#">BAR-H</a>
-                            <a href="#">City Station</a>
-                            <a href="#">Lally</a>
-                            <a href="#">Student Union</a>
-                        </div>
-                    </div>
+                        <!-- Location Overlay content -->
+                        <div class="overlayContentLocation">
+                            <a onclick="setLocation('amosteaton')">Amos Eaton</a>
+                            <a onclick="setLocation('barton')">Barton</a>
+                            <a onclick="setLocation('barh')">BAR-H</a>
+                            <a onclick="setLocation('citystation')">City Station</a>
+                            <a onclick="setLocation('lally')">Lally</a>
+                            <a onclick="setLocation('studentunion')">Student Union</a>
+                        </div> <!-- close div overlayContentLocation-->
+                    </div> <!-- close myNavLocation div -->
 
-                    <div id="myNav2" class="overlay">
-                        <!-- Button to close the overlay navigation -->
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav2()">&times;</a>
+                    <div id="myNavDate" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavDate()">&times;</a>
 
-                        <!-- Overlay content -->
-                        <div class="overlay-content2">
-                            <a href="#">Date</a>
-                            <a href="#">Month</a>
-                            <a href="#">Year</a>
-                        </div>
-                    </div>
-                    
+                        <!-- Month Overlay content -->
+                        <div class="overlayContentDate">
+                            <a onclick="setMonth('jan')">January 2016</a>
+                            <a onclick="setMonth('fed')">February 2016</a>
+                            <a onclick="setMonth('march')">March 2016</a>
+                            <a onclick="setMonth('april')">April 2016</a>
+                            <a onclick="setMonth('may')">May 2016</a>
+                            <a onclick="setMonth('june')">June 2016</a>
+                            <a onclick="setMonth('july')">July 2016</a>
+                            <a onclick="setMonth('aug')">August 2016</a>
+                            <a onclick="setMonth('sept')">September 2016</a>
+                            <a onclick="setMonth('oct')">October 2016</a>
+                            <a onclick="setMonth('nov')">November 2016</a>
+                            <a onclick="setMonth('dec')">December 2016</a>
+                        </div> <!-- close overlayContentDate div -->
+                    </div> <!--close myNavDate div -->
 
-                </div> <!-- filter_box_words -->
-            </div> <!-- filter_box -->
+                    <div id="myNavType" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavType()">&times;</a>
+
+                        <!-- Type of Incident Overlay content -->
+                        <div class="overlayContentType">
+                            <a onclick="setTypeIncident('mischief')">Mischief</a>
+                            <a onclick="setTypeIncident('firealarm')">Fire Alarm</a>
+                            <a onclick="setTypeIncident('medical incident')">Medical Incident</a>
+                            <a onclick="setTypeIncident('intoxication')">Intoxication</a>
+                            <a onclick="setTypeIncident('propertydamage')">Property Damage</a>
+                            <a onclick="setTypeIncident('larceny')">Larceny</a>
+                            <a onclick="setTypeIncident('assault')">Assault</a>
+                        </div> <!-- close overlayContentType div -->
+                    </div> <!-- close myNavType div -->
+
+                </div> <!-- filterBoxWords -->
+            </div> <!-- filterBox -->
         </div>
         <script>
 
-
+        //initialize the map perameters
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw';
         var map = new mapboxgl.Map({
             container: 'map',
@@ -66,6 +97,7 @@
             minZoom: 13.7
         });
 
+        //Load the map when it is added
         map.on('load', function () {
             map.addSource("points", {
                 "type": "geojson",
@@ -98,22 +130,76 @@
             });
         });
 
-        function openNav() {
-            document.getElementById("myNav").style.width = "100%";
+        //opens the overlay for the location options
+        function openNavLocation() {
+            document.getElementById("myNavLocation").style.width = "100%";
         }
 
-        /* Close when someone clicks on the "x" symbol inside the overlay */
-        function closeNav() {
-            document.getElementById("myNav").style.width = "0%";
+        //closes the overlay for the location options
+        function closeNavLocation() {
+            document.getElementById("myNavLocation").style.width = "0%";
         }
 
-        function openNav2() {
-            document.getElementById("myNav2").style.width = "100%";
+        //opens the overlay for the type of incident options
+        function openNavType() {
+            document.getElementById("myNavType").style.width = "100%";
         }
 
-        /* Close when someone clicks on the "x" symbol inside the overlay */
-        function closeNav2() {
-            document.getElementById("myNav2").style.width = "0%";
+        //closes the overlay for the type of incident options
+        function closeNavType() {
+            document.getElementById("myNavType").style.width = "0%";
+        }
+
+        //open the overlay for the date options
+        function openNavDate() {
+            document.getElementById("myNavDate").style.width = "100%";
+        }
+
+        //closes the overlay for the date options
+        function closeNavDate() {
+            document.getElementById("myNavDate").style.width = "0%";
+        }
+
+        // Code for storing the values of the location selection
+        var locationSelected;
+        function setLocation(choice) {
+            //set the location value based on what was clicked
+            locationSelected = choice;
+            alert(locationSelected);
+
+            //call the python function given the location
+
+            //close the overlay options
+            closeNavLocation();
+
+        }
+
+        // Code for storing the values of the location selection 
+        var monthSelected;
+        function setMonth(choice) {
+            //set the month value based on what was clicked
+            monthSelected = choice;
+            alert(monthSelected);
+
+            //call the python function given the location
+
+            //close the overlay options
+            closeNavDate();
+
+        }
+
+        // Code for storing the values of the type selection 
+        var typeSelected;
+        function setTypeIncident(choice) {
+            //set the type of incident value based on what was clicked
+            typeSelected = choice;
+            alert(typeSelected);
+
+            //call the python function given the type of incident
+
+            //close the overlay options
+            closeNavType();
+
         }
 
         </script>
