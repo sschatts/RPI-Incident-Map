@@ -1,4 +1,4 @@
-pip install pymongo
-pip install mapbox
-pip install pytest
-pip install bson
+pymongo
+mapbox
+pytest
+bson
