@@ -140,3 +140,16 @@ body {
     right: 45px;
     font-size: 60px;
 }
+/*get ride of radio button*/
+
+
+input[type=radio]:not(old){
+  width   : 0px;
+  margin  : 0;
+  padding : 0;
+  opacity : 0;
+}
+ 
+div .leaflet-popup-tip-container {
+	margin-right: 130px;
+}

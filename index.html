@@ -5,6 +5,29 @@
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> <!--Raleway Font link-->
         <link rel="stylesheet" href="style.css">
+
+        <!--Links from Levin's code -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+
+        <!--for reading the JSON-->
+        <script data-main="scripts/main" src="scripts/require.js"></script>
     </head>
     <body>
         <div>
@@ -88,47 +111,47 @@
 
         //initialize the map perameters
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v9',
-            center: [-73.676,42.727],
-            zoom: 13.8,
-            maxZoom: 17.5,
-            minZoom: 13.7
-        });
+        // var map = new mapboxgl.Map({
+        //     container: 'map',
+        //     style: 'mapbox://styles/mapbox/streets-v9',
+        //     center: [-73.676,42.727],
+        //     zoom: 13.8,
+        //     maxZoom: 17.5,
+        //     minZoom: 13.7
+        // });
 
         //Load the map when it is added
-        map.on('load', function () {
-            map.addSource("points", {
-                "type": "geojson",
-                "data": {
-                    "type": "FeatureCollection",
-                    "features": [{
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [-73.677,42.730]
-                        },
-                        "properties": {
-                            "icon": "monument"
-                        }
-                    }]
-                }
-            });
+        // map.on('load', function () {
+        //     map.addSource("points", {
+        //         "type": "geojson",
+        //         "data": {
+        //             "type": "FeatureCollection",
+        //             "features": [{
+        //                 "type": "Feature",
+        //                 "geometry": {
+        //                     "type": "Point",
+        //                     "coordinates": [-73.677,42.730]
+        //                 },
+        //                 "properties": {
+        //                     "icon": "monument"
+        //                 }
+        //             }]
+        //         }
+        //     });
 
-            map.addLayer({
-                "id": "points",
-                "type": "symbol",
-                "source": "points",
-                "layout": {
-                    "icon-image": "{icon}-15",
-                    "text-field": "{title}",
-                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                    "text-offset": [0, 0.6],
-                    "text-anchor": "top"
-                }
-            });
-        });
+        //     map.addLayer({
+        //         "id": "points",
+        //         "type": "symbol",
+        //         "source": "points",
+        //         "layout": {
+        //             "icon-image": "{icon}-15",
+        //             "text-field": "{title}",
+        //             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        //             "text-offset": [0, 0.6],
+        //             "text-anchor": "top"
+        //         }
+        //     });
+        // });
 
         //opens the overlay for the location options
         function openNavLocation() {
@@ -201,6 +224,100 @@
             closeNavType();
 
         }
+
+        //code merged from Levin
+        var JsonStuff = [];
+        $.ajax({
+            async: false,
+            url: 'NOV_16.json',
+            data: "",
+            accepts:'application/json',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    JsonStuff.push( data[i]);
+                }
+            }
+        });
+        
+        
+        var lul = new L.LayerGroup();
+        var ECAV = new L.LayerGroup();
+        var EcavMarkers = [];
+        //console.log(JsonStuff.length)
+        for (var j = 0; j < JsonStuff.length; j++){
+            //console.log(JsonStuff[j].location)
+            if (JsonStuff[j].location == 'EAST CAMPUS ATHLETIC VILLAGE'){
+                //console.log(JsonStuff[j].lon);
+                EcavMarkers.push([JsonStuff[j].coordinates[0], JsonStuff[j].coordinates[1], JsonStuff[j].incident])
+            }
+        }
+        console.log(EcavMarkers[0])
+        var icon_lul = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'pink',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+        var icon_ecav = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'blue',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+        for (var i=0; i<EcavMarkers.length; i++) {
+            var lat = EcavMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = EcavMarkers[i][1];
+            var popupText = EcavMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(ECAV);
+            marker.setIcon(icon_ecav);
+        }
+        
+        var markers = [
+           [ -73.667571,42.732456, "ECAV Pink" ]
+        ];
+        
+        
+        for (var i=0; i<markers.length; i++) {
+            var lon = markers[i][0];
+            var lat = markers[i][1];
+            var popupText = markers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(lul);
+            //marker.bindPopup(popupText);
+            marker.setIcon(icon_lul);
+        }
+
+
+        var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+
+        var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+        
+        var map = L.map('map', {
+            center: [42.730105,-73.6771229],
+            zoom: 15,
+            layers: [ECAV, lul]
+        });
+        map.options.maxZoom = 17;
+        map.options.minZoom = 15;
+
+        L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
+        //map.addControl(L.control.fractionalZoom({position: 'topright', zoomIncrement:.1}));
+        var baseLayers = {
+            "Select Location Areas:": streets
+        };
+
+        var overlays = {
+            "ECAV": ECAV,
+            "lul": lul
+        };
+
+        L.control.layers(baseLayers, overlays).addTo(map);
 
         </script>
 
