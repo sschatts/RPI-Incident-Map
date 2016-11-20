@@ -122,6 +122,13 @@ def dumpJSON():
     	f.close()
     	return 0
 
+def filename():
+	year = datetime.datetime.now().year
+	month = datetime.datetime.now().month
+	filename = __date_format
+	desireable = [((month, year), "{fn}".format(fn=filename))]
+	return desireable
+
 def test_db():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __date_format)) == 0
     	assert createDatabase(None) == 0
@@ -138,6 +145,7 @@ def main():
     	# for post in __posts.find():
     	# 	print post
     	dumpJSON()
+    	print filename()
 
 if __name__ == "__main__":
     main()
