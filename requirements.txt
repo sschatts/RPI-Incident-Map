@@ -2,5 +2,4 @@ pymongo
 mapbox
 pytest
 bson
-bson.json_util
 geocoder
