@@ -9,7 +9,19 @@
 
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
 
 
 	<style>
@@ -45,29 +57,36 @@
 	});
 	*/
 	var locations = new L.LayerGroup();
-	/*
-	for (var i = 0; i < array.length; i++){
-		if (array[i].incident.indexOf('Larceny') !== -1){
-		
-		}
-		else if (array[i].incident.indexOf('Assault') !== -1){
-		
-		}
-		else if (array[i].incident.indexOf('Property') !== -1){}
-		else if (array[i].incident.indexOf('Medical') !== -1){}
-		else if (array[i].incident.indexOf('Mischief') !== -1){}
-		else if (array[i].incident.indexOf('Fire alarm') !== -1){}
-		else if (array[i].incident.indexOf('Harassment') !== -1){}
-		else if (array[i].incident.indexOf('Stolen') !== -1){}
-		else if (array[i].incident.indexOf('Others') !== -1){}
-		if (array[i].location.indexOf())
-		
-	}*/
+	var lul = new L.LayerGroup();
 
 	L.marker([39.61, -105.02], {icon: new L.Icon.Default()}).bindPopup('This is Littleton, CO.').addTo(locations),
 	L.marker([39.74, -104.99], {icon: new L.Icon.Default()}).bindPopup('This is Denver, CO.').addTo(locations),
 	L.marker([39.73, -104.8], {icon: new L.Icon.Default()}).bindPopup('This is Aurora, CO.').addTo(locations),
 	L.marker([39.77, -105.23], {icon: new L.Icon.Default()}).bindPopup('This is Golden, CO.').addTo(locations);
+	
+	var markers = [
+	   [ -105.4, 39.64, "Big Ben" ],
+	   [ -104.86, 39.72, "London Eye" ],
+	   [ -105.14, 39.82, "Nelson's Column<br><a href=\"https://en.wikipedia.org/wiki/Nelson's_Column\">wp</a>" ] 
+	];
+	var icon_lul = L.AwesomeMarkers.icon({
+		icon: 'cloud',
+		iconColor: 'white',
+		markerColor: 'pink',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	
+	for (var i=0; i<markers.length; i++) {
+		var lon = markers[i][0];
+		var lat = markers[i][1];
+		var popupText = markers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(lul);
+		marker.bindPopup(popupText);
+		marker.setIcon(icon_lul);
+		
+	}
 
 
 	var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -89,7 +108,8 @@
 	};
 
 	var overlays = {
-		"locations": locations
+		"locations": locations,
+		"lul": lul
 	};
 
 	L.control.layers(baseLayers, overlays).addTo(map);
