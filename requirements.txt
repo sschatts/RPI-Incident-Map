@@ -1,5 +1,4 @@
 pymongo
 mapbox
 pytest
-bson
 geocoder
