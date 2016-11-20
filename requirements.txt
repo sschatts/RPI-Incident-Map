@@ -1,5 +1,4 @@
 pymongo
-pytest
 mapbox
 pytest
 bson
