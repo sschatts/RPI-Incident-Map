@@ -1,9 +1,8 @@
-import urllib2, sys, subprocess, os, datetime, re, geocoder
+import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest
 from pymongo import MongoClient
 from mapbox import Geocoder
 from bson import Binary, Code, json_util
 from bson.json_util import dumps
-import json
 
 #import location
 #import incident
@@ -31,6 +30,8 @@ def downloadAndConvertFile(download_url):
     file.close()
 
     os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __date_format))
+
+    return 0
 
     #print("Completed")
 
@@ -111,7 +112,7 @@ def createDatabase(incid_cache):
 			#i_cache.insertIncident(i)
 			seen_disposition = False
 
-			#return i_cache
+	return 0
 
 def dumpJSON():
 	f = open("{fn}.json".format(fn = __date_format), "w+")
@@ -119,6 +120,12 @@ def dumpJSON():
     	json_docs = json.dumps(docs_list, default=json_util.default, indent=4, separators=(',', ': '))
     	f.write(json_docs)
     	f.close()
+    	return 0
+
+def test_db():
+	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __date_format)) == 0
+    	assert createDatabase(None) == 0
+    	assert dumpJSON() == 0
 
 def main():
 	print __date_format
