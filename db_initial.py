@@ -4,17 +4,8 @@ from mapbox import Geocoder
 from bson import Binary, Code, json_util
 from bson.json_util import dumps
 
-#import location
-#import incident
-#import incident_cache
-
-#TODO: How to make this work with multiple PDFs
-#TODO: Add to the database instead of recreate it every time
-#TODO: Have this run continuously instead of just once
-
-#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __date_format to hold that string
-__date_format = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
-#__date_format = "OCT_16"
+#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __dateFormat to hold that string
+__dateFormat = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 
 #Connect to the proper set of posts in the incident database's collection.
 __connection = MongoClient()
@@ -25,28 +16,27 @@ __posts = __db.posts
 #Download the .pdf for the current month from Pub Safe by opening the URL and dumping it into a PDF. Then use Ghost Script (gs) to convert it to a text file
 def downloadAndConvertFile(download_url):
     response = urllib2.urlopen(download_url)
-    file = open("{fn}.pdf".format(fn = __date_format), 'wb')
+    file = open("{fn}.pdf".format(fn = __dateFormat), 'wb')
     file.write(response.read())
     file.close()
 
-    os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __date_format))
+    os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __dateFormat))
 
     return 0
 
-    #print("Completed")
-
-def createDatabase(incid_cache):
-	file = open("{fn}.txt".format(fn = __date_format), 'r')
-	report_num = []; date_reported = []; location = []; event_num = []; datetime_fromto = []; incident = [];  report_num = []; disposition = []; coords = [];
-	seen_disposition = False
+def createDatabase():
+	file = open("{fn}.txt".format(fn = __dateFormat), 'r')
+	reportNum = []; dateReported = []; location = []; eventNum = []; dateTimeFromTo = []; incident = [];  disposition = []; coords = []; month = "";
+	seenDisposition = False
 
 	for line in file: #for every line in the text file
 		#Every if statement uses regular expressions to locate the desired field and then records whatever comes after the field up to where the question mark is (or the end of the line if not question mark)
 		#Basically, if what it finds isn't null then write what it (it being re.findall()) finds to a variable
 		if re.findall(r'date reported:.* (?=location)', line):
-			date_reported = ''.join(re.findall(r'date reported:.* (?=location)', line))
-			date_reported = date_reported.replace('date reported:','').strip().rstrip()
-			#print date_reported
+			dateReported = ''.join(re.findall(r'date reported:.* (?=location)', line))
+			dateReported = dateReported.replace('date reported:','').strip().rstrip()
+			month = dateReported[:2]
+			#print dateReported
 
 		if re.findall(r'location :.* (?=event)', line):
 			location = ''.join(re.findall(r'location :.* (?=event)', line))
@@ -62,14 +52,14 @@ def createDatabase(incid_cache):
 			#print location
 
 		if re.findall(r'event #:.*', line):
-			event_num = ''.join(re.findall(r'event #:.*', line))
-			event_num = event_num.replace('event #:','').strip().rstrip()
-			#print event_num
+			eventNum = ''.join(re.findall(r'event #:.*', line))
+			eventNum = eventNum.replace('event #:','').strip().rstrip()
+			#print eventNum
 
 		if re.findall(r'date and time occurred from - occurred to:.*', line):
-			datetime_fromto = ''.join(re.findall(r'date and time occurred from - occurred to:.*', line))
-			datetime_fromto = datetime_fromto.replace('date and time occurred from - occurred to:','').strip().rstrip()
-			#print datetime_fromto
+			dateTimeFromTo = ''.join(re.findall(r'date and time occurred from - occurred to:.*', line))
+			dateTimeFromTo = dateTimeFromTo.replace('date and time occurred from - occurred to:','').strip().rstrip()
+			#print dateTimeFromTo
 
 		if re.findall(r'incident :.* (?=report #:)', line):
 			incident = ''.join(re.findall(r'incident :.* (?=report #:)', line))
@@ -77,75 +67,61 @@ def createDatabase(incid_cache):
 			#print incident
 
 		if re.findall(r'report #:.*', line):
-			report_num = ''.join(re.findall(r'report #:.*', line))
-			report_num = report_num.replace('report #:','').strip()
-			#print report_num
+			reportNum = ''.join(re.findall(r'report #:.*', line))
+			reportNum = reportNum.replace('report #:','').strip()
+			#print reportNum
 
 		if re.findall(r'disposition:.*', line):
 			disposition = ''.join(re.findall(r'disposition:.*', line))
 			disposition = disposition.replace('disposition: :','').strip().rstrip()
-			seen_disposition = True
+			seenDisposition = True
 			#print disposition
 
-		if seen_disposition:
-			month = date_reported[:2]
-
-
-			#print str(coords) + ":" + location + ":" + incident
-			#print coords
-
+		if seenDisposition:
 			#write the formatted information into a properly formatted post for the MongoDB
-			post = {"date reported": date_reported,
+			post = {"date reported": dateReported,
 					 "month": month,
 					 "location": location,
-					 "event #": event_num,
-					 "date and time occurred from to occurred to": datetime_fromto,
+					 "event #": eventNum,
+					 "date and time occurred from to occurred to": dateTimeFromTo,
 					 "incident": incident,
-					 "report #": report_num,
+					 "report #": reportNum,
 					 "disposition": disposition,
 					 "coordinates": coords}
 			#Insert the post into the database's collection's posts
 			__posts.insert(post)
-
-			#l = Location(location, coords)
-			#i = Incident(event_num, event_type, l, disposition)
-			#i_cache.insertIncident(i)
-			seen_disposition = False
+			seenDisposition = False
 
 	return 0
 
 def dumpJSON():
-	f = open("{fn}.json".format(fn = __date_format), "w+")
-    	docs_list = list(__posts.find())
-    	json_docs = json.dumps(docs_list, default=json_util.default, indent=4, separators=(',', ': '))
-    	f.write(json_docs)
+	f = open("{fn}.json".format(fn = __dateFormat), "w+")
+    	docsList = list(__posts.find())
+    	jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(',', ': '))
+    	f.write(jsonDocs)
     	f.close()
     	return 0
 
 def filename():
 	year = datetime.datetime.now().year
 	month = datetime.datetime.now().month
-	filename = __date_format
+	filename = __dateFormat
 	desireable = [((month, year), "{fn}".format(fn=filename))]
 	return desireable
 
 def test_db():
-	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __date_format)) == 0
-    	assert createDatabase(None) == 0
+	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
+    	assert createDatabase() == 0
     	assert dumpJSON() == 0
 
 def main():
-	print __date_format
+	#print __dateFormat
 	result = __posts.delete_many({})
-	print result.deleted_count
-    	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __date_format))
-	#cache = IncidentCache()
-    	#cache = create_database_and_cache(cache)
-    	createDatabase(None)
-    	# for post in __posts.find():
-    	# 	print post
+	#print result.deleted_count
+    	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
+    	createDatabase()
     	dumpJSON()
-    	print filename()
+    	#print filename()
 
 if __name__ == "__main__":
     main()
