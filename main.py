@@ -9,9 +9,15 @@ def testDB():
     	assert db_initial.createDatabase() == 0
     	assert db_initial.dumpJSON() == 0
 
+def testCache():
+
+
 def main():
 	testDB()
 	db_initial.runDB()
+
+	testCache()
+	incident_generator_class.runCache()
 
 if __name__ == "__main__":
     main()
