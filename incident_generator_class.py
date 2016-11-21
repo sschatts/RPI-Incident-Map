@@ -62,7 +62,7 @@ class JsonToIncident:
         
         
         self.location_data = LocationData()
-        self.json_files = {(10,2016):"test.json", (11,2016): "NOV_16.json"}
+        self.json_files = {(10,2016):"OCT_16.json", (11,2016): "NOV_16.json"}
         
     #returns list of dictionaries for months matching date range
     def getJsonDic(self):
