@@ -109,10 +109,6 @@ def filename():
 	desireable = [((month, year), "{fn}".format(fn=filename))]
 	return desireable
 
-def testDB():
-	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
-    	assert createDatabase() == 0
-    	assert dumpJSON() == 0
 
 def runDB():
 	#print __dateFormat
