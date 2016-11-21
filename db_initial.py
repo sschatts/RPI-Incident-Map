@@ -121,5 +121,4 @@ def runDB():
     	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
     	createDatabase()
     	dumpJSON()
-    	testDB()
     	#print filename()
