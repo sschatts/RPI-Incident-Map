@@ -36,46 +36,37 @@ def createDatabase():
 			dateReported = ''.join(re.findall(r'date reported:.* (?=location)', line))
 			dateReported = dateReported.replace('date reported:','').strip().rstrip()
 			month = dateReported[:2]
-			#print dateReported
 
 		if re.findall(r'location :.* (?=event)', line):
 			location = ''.join(re.findall(r'location :.* (?=event)', line))
 			location = location.replace('location :','').strip()
-			#Using the location's name, use Google's API to find it's latitude and longitude
-			#response = geocoder.mapbox("{loc}, Troy, New York 12180, United States".format(loc = location))
-			#coords = response.latlng
+
+			#Using the location's name, use Mapbox's API to find it's latitude and longitude
 			geocoder = Geocoder(access_token='pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw')
 			response = geocoder.forward("{loc}, Troy, New York 12180, United States".format(loc = location))
 			first = response.geojson()['features'][0]
 			coords = [first['geometry']['coordinates'][1], first['geometry']['coordinates'][0]]
-			print coords
-			#print location
 
 		if re.findall(r'event #:.*', line):
 			eventNum = ''.join(re.findall(r'event #:.*', line))
 			eventNum = eventNum.replace('event #:','').strip().rstrip()
-			#print eventNum
 
 		if re.findall(r'date and time occurred from - occurred to:.*', line):
 			dateTimeFromTo = ''.join(re.findall(r'date and time occurred from - occurred to:.*', line))
 			dateTimeFromTo = dateTimeFromTo.replace('date and time occurred from - occurred to:','').strip().rstrip()
-			#print dateTimeFromTo
 
 		if re.findall(r'incident :.* (?=report #:)', line):
 			incident = ''.join(re.findall(r'incident :.* (?=report #:)', line))
 			incident = incident.replace('incident :','').strip()
-			#print incident
 
 		if re.findall(r'report #:.*', line):
 			reportNum = ''.join(re.findall(r'report #:.*', line))
 			reportNum = reportNum.replace('report #:','').strip()
-			#print reportNum
 
 		if re.findall(r'disposition:.*', line):
 			disposition = ''.join(re.findall(r'disposition:.*', line))
 			disposition = disposition.replace('disposition: :','').strip().rstrip()
 			seenDisposition = True
-			#print disposition
 
 		if seenDisposition:
 			#write the formatted information into a properly formatted post for the MongoDB
@@ -120,11 +111,7 @@ def testDB():
 
 #how another file can populate the database and dump the JSON
 def runDB():
-	#print __dateFormat
-	result = __posts.delete_many({})
-	#print result.deleted_count
     	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
     	createDatabase()
     	dumpJSON()
     	return 0
-    	#print filename()
