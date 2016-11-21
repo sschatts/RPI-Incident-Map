@@ -113,7 +113,7 @@ def testDB():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
-    	#assert isinstance(filename(), str)
+    	assert isinstance(filename(), dict)
 
 def runDB():
 	#print __dateFormat
