@@ -204,16 +204,15 @@ class IncidentCache:
         self.end_date = new_end 
         
         self.incidents = new_incidents
+
         
-def main():    
+def getCacheJsonByMonth(month):    
     cache = IncidentCache()
     
-    cache.setCacheByDate(date(2016, 10, 1), date(2016, 10, 20))
+    cache.setCacheByDate(date(2016, month, 1), date(2016, month, 31))
     
     ItoJ = IncidentToJson()
-    ItoJ.createJson(cache.incidents)
     
+    return ItoJ.createJson(cache.incidents)
     
-if __name__ == "__main__":
-    main()
         
