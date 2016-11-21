@@ -1,8 +1,6 @@
 
 import json
 
-#import incident_class
-#import location
 from datetime import date
 from datetime import time
 
@@ -36,11 +34,11 @@ class LocationData():
         
         self.north = {"GYMNASIUM, '87", "CAMPUS PARKING, NORTH LOT", "E-COMPLEX", "COLONIE APARTMENTS", "Heffner", "J-BUILDING", "SAGE AVENUE", "BLITMAN RESIDENCE COMMONS"}
         
-        self.east = {"EAST CAMPUS ATHLETIC VILLAGE", "HOUSTON FIELD HOUSE", "BURDETT AVENUE RESIDENCE", "DAVISON HALL", "NASON HALL", "CROCKETT HALL", "BARTON HALL", "RENSSELAER UNION", "BRAY HALL" "RAHPS - ALBRIGHT", "RAHPS-B", "COMMONS DINING HALL (FRES", "COMMONS PARKING", "Robinson Pool", "Mueller Center", "Quadrangle Dorms", "DEPARTMENT OF PUBLIC SAFETY", "NED HARKNESS ATHLETIC FIE", "Stackwyck", "Sherry Road", "BRYCKWYCK APARTMENTS", "WARREN HALL", "Cary Hall", "BRINSMADE TERRACE", "Sharp Hall", "Critical Facility", "NUGENT HALL"}
+        self.east = {"EAST CAMPUS ATHLETIC VILLAGE", "HOUSTON FIELD HOUSE", "BURDETT AVENUE RESIDENCE", "DAVISON HALL", "NASON HALL", "CROCKETT HALL", "BARTON HALL", "RENSSELAER UNION", "BRAY HALL" "RAHPS - ALBRIGHT", "RAHPS-B", "COMMONS DINING HALL (FRES", "COMMONS PARKING", "Robinson Pool", "MUELLER CENTER", "QUADRANGLE DORMS", "DEPARTMENT OF PUBLIC SAFETY", "NED HARKNESS ATHLETIC FIE", "STACWYCK - MCGIFFERT", "Sherry Road", "BRYCKWYCK APARTMENTS", "WARREN HALL", "Cary Hall", "BRINSMADE TERRACE", "Sharp Hall", "Critical Facility", "NUGENT HALL"}
         
-        self.off = {"OTHER OFF-CAMPUS LOCATION"}
-        self.west = {"POLYTECH APARTMENTS", "CITY STATION"}
-        self.south = {}
+        self.off = {"OTHER OFF-CAMPUS LOCATION", "BEMAN LANE"}
+        self.west = {"POLYTECH APARTMENTS", "CITY STATION", "CAMPUS PARKING, WEST LOT", "EMPAC BUILDING"}
+        self.south = {"MOE'S SOUTHWEST GRILL"}
         self.academic = {"RUSSELL SAGE LABORATORY", "COGSWELL LABORATORY", "GREENE BUILDING", "JONSSON ENGINEERING CENTE", "ACADEMY HALL"}
         self.default_group = "RPI"
         #self.missing_coords = {}
@@ -56,13 +54,16 @@ class LocationData():
 
 class JsonToIncident:
     
-    def __init__(self):
+    def __init__(self, files):
         self.begin_date = date(2016, 10, 1)
         self.end_date = date(2016, 10, 31)
         
         
         self.location_data = LocationData()
-        self.json_files = {(10,2016):"OCT_16.json", (11,2016): "NOV_16.json"}
+        self.json_files = {}
+        
+    def setJsonfiles(self, files):        
+        self.json_files = files
         
     #returns list of dictionaries for months matching date range
     def getJsonDic(self):
@@ -166,6 +167,9 @@ class IncidentCache:
         
         self.JtoI = JsonToIncident()
         
+    def assignJsonFiles(self, files):
+        self.JtoI.setJsonFiles(files)
+        
     def setCacheByDate(self, _begin_date, _end_date):
     
         if (len(self.incidents) == 0):
@@ -204,15 +208,24 @@ class IncidentCache:
         self.end_date = new_end 
         
         self.incidents = new_incidents
+        
 
         
-def getCacheJsonByMonth(month):    
+def getCacheJsonByMonth(month):
+    
+    db_inital.runDB()
     cache = IncidentCache()
     
+    cache.assignJsonFiles(db_initial.filename())
     cache.setCacheByDate(date(2016, month, 1), date(2016, month, 31))
     
     ItoJ = IncidentToJson()
     
     return ItoJ.createJson(cache.incidents)
+
+def main():
+    getCacheJsonByMonth(11)
     
+if __name__ == "__main__":
+    main()
         
