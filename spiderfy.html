@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!--leaflet initialization -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+	<script src="/js/leaflet-0.7.2/leaflet.ajax.min.js"></script>
+	<script type="text/javascript" src="oms.min.js"></script>
+	<link rel="stylesheet" href="../dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+	<script src="../dist/leaflet.markercluster-src.js"></script>
+
+	<style>
+		#map {
+			position:absolute; top:0; bottom:0; width:100%;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+	//populate jsonObjects with Json objects
+	var jsonObjects = [];
+	$.ajax({
+		async: false,
+		url: 'incidents.json',
+		data: "",
+		accepts:'application/json',
+		dataType: 'json',
+		success: function (data) {
+			for (var i = 0; i < data.length; i++) {
+				jsonObjects.push( data[i]);
+			}
+		}
+	});
+	
+	//initialize layergroups and arrays
+	var RPI = new L.LayerGroup();
+	var north = new L.LayerGroup();
+	var south = new L.LayerGroup();
+	var east = new L.LayerGroup();
+	var west = new L.LayerGroup();
+	var rpiMarkers = [];
+	var northMarkers = [];
+	var southMarkers = [];
+	var eastMarkers = [];
+	var westMarkers = [];
+	
+	//popuplate jsonObjects
+	for (var j = 0; j < jsonObjects.length; j++){
+		if (jsonObjects[j]['location group'] == 'RPI'){
+			rpiMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
+		}
+		else if (jsonObjects[j]['location group'] == 'North'){
+			northMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
+		}
+		else if (jsonObjects[j]['location group'] == 'South'){
+			southMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
+		}
+		else if (jsonObjects[j]['location group'] == 'East'){
+			eastMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
+		}
+		else if (jsonObjects[j]['location group'] == 'West'){
+			westMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
+		}
+	}
+	console.log(jsonObjects.length)
+	
+	//create different colored icons for each location group
+	var iconNorth = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'pink',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	var iconSouth = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'purple',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	var iconEast = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'green',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	var iconWest = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'yellow',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	var iconRPI = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'blue',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	var iconDark = L.AwesomeMarkers.icon({
+		icon: 'none',
+		markerColor: 'black',
+		prefix: 'glyphicon',
+		extraClasses: 'fa-rotate-0'
+	});
+	
+	
+	//initialize the map
+	var map = L.map('map', {
+		center: [42.730105,-73.6771229],
+		zoom: 15,
+		layers: [RPI, north, south, east, west]
+	});
+	
+	
+	//OMS functionality for spiderfying markers.
+	var oms = new OverlappingMarkerSpiderfier(map);
+	var popup = new L.Popup({closeButton: false, offset: new L.Point(0.5, -24)});
+	oms.addListener('click', function(marker) {
+		popup.setContent(marker.desc);
+		popup.setLatLng(marker.getLatLng());
+		console.log(marker.desc)
+		map.openPopup(popup);
+	});
+	oms.addListener('spiderfy', function(markers) {
+		for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(new lightIcon());
+		map.closePopup();
+	});
+	oms.addListener('unspiderfy', function(markers) {
+		for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(iconDark());
+	});
+	
+	//for loops for adding markers to the map
+	for (var i=0; i<rpiMarkers.length; i++) {
+		var lat = rpiMarkers[i][0];
+		var lon = rpiMarkers[i][1];
+		var popupText = rpiMarkers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText);
+		marker.setIcon(iconRPI);
+		marker.addTo(RPI)
+		oms.addMarker(marker);
+	}
+	for (var i=0; i<northMarkers.length; i++) {
+		var lat = northMarkers[i][0];
+		var lon = northMarkers[i][1];
+		var popupText = northMarkers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(north);
+		marker.setIcon(iconNorth);
+		oms.addMarker(marker);
+	}
+	for (var i=0; i<southMarkers.length; i++) {
+		var lat = southMarkers[i][0];
+		var lon = southMarkers[i][1];
+		var popupText = southMarkers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(south);
+		marker.setIcon(iconSouth);
+		oms.addMarker(marker);
+	}
+	for (var i=0; i<eastMarkers.length; i++) {
+		var lat = eastMarkers[i][0];
+		var lon = eastMarkers[i][1];
+		var popupText = eastMarkers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(east);
+		marker.setIcon(iconEast);
+		oms.addMarker(marker);
+	}
+	for (var i=0; i<westMarkers.length; i++) {
+		var lat = westMarkers[i][0];
+		var lon = westMarkers[i][1];
+		var popupText = westMarkers[i][2];
+		var markerLocation = new L.LatLng(lat, lon);
+		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(west);
+		marker.setIcon(iconWest);
+		oms.addMarker(marker);
+	}
+
+	//map initialization vars
+	var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+	var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+	//set max and min zoom for convenience
+	map.options.maxZoom = 17;
+	map.options.minZoom = 15;
+	//populates map with base image
+	L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
+	
+	//adds base image
+	var baseLayers = {
+		"Select Location Areas:": streets
+	};
+	//adds layers
+	var overlays = {
+		"RPI": RPI,
+		"North": north,
+		"South": south,
+		"East": east,
+		"West": west
+	};
+	//creates control for layers
+	L.control.layers(baseLayers, overlays).addTo(map);
+</script>
+
+
+
+</body>
+</html>
