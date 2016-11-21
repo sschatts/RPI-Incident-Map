@@ -4,7 +4,7 @@ from mapbox import Geocoder
 from bson import Binary, Code, json_util
 from bson.json_util import dumps
 
-#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __dateFormat to hold that string
+#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __dateFormat to hold that string for the current month
 __dateFormat = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 
 #Connect to the proper set of posts in the incident database's collection.
@@ -29,7 +29,7 @@ def createDatabase():
 	reportNum = []; dateReported = []; location = []; eventNum = []; dateTimeFromTo = []; incident = [];  disposition = []; coords = []; month = "";
 	seenDisposition = False
 
-	for line in file: #for every line in the text file
+	for line in file: #For every line in the text file
 		#Every if statement uses regular expressions to locate the desired field and then records whatever comes after the field up to where the question mark is (or the end of the line if not question mark)
 		#Basically, if what it finds isn't null then write what it (it being re.findall()) finds to a variable
 		if re.findall(r'date reported:.* (?=location)', line):
@@ -69,7 +69,7 @@ def createDatabase():
 			seenDisposition = True
 
 		if seenDisposition:
-			#write the formatted information into a properly formatted post for the MongoDB
+			#Write the formatted information into a properly formatted post for the MongoDB
 			post = {"date reported": dateReported,
 					 "month": month,
 					 "location": location,
@@ -85,16 +85,19 @@ def createDatabase():
 
 	return 0
 
-#dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
+#Dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
 def dumpJSON():
 	f = open("{fn}.json".format(fn = __dateFormat), "w+")
+	#Gets a list of all of the posts that are in the database. Each post is an incident.
     	docsList = list(__posts.find())
+    	#Creates a dump of the posts.
     	jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(',', ': '))
+    	#Writes the dumps to a JSON file
     	f.write(jsonDocs)
     	f.close()
     	return 0
 
-#returns the filename of the JSON created in the function above along with the month and year in number, number tuple
+#Returns the filename of the JSON created in the function above along with the month and year in number, number tuple. Needed for part of Kit's code.
 def filename():
 	year = datetime.datetime.now().year
 	month = datetime.datetime.now().month
@@ -102,14 +105,14 @@ def filename():
 	desireable = {(month, year) : "{fn}.json".format(fn=filename)}
 	return desireable
 
-#assert statements to test that all functions run and return the proper result
+#Assert statements to test that all functions run and return the proper result
 def testDB():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
     	assert isinstance(filename(), dict)
 
-#how another file can populate the database and dump the JSON
+#How another file can populate the database and dump the JSON
 def runDB():
     	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
     	createDatabase()
