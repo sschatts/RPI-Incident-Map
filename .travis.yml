@@ -4,4 +4,4 @@ python:
 sudo: required
 install: pip install -r requirements.txt
 services: mongodb
-script: pytest db_initial.py
+script: pytest main.py

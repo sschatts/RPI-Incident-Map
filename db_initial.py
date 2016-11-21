@@ -114,7 +114,7 @@ def test_db():
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
 
-def main():
+def runDB():
 	#print __dateFormat
 	result = __posts.delete_many({})
 	#print result.deleted_count
@@ -122,6 +122,3 @@ def main():
     	createDatabase()
     	dumpJSON()
     	#print filename()
-
-if __name__ == "__main__":
-    main()
