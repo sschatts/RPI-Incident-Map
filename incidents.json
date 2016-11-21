@@ -1,0 +1,300 @@
+[
+	{
+		"date reported": "2016-11-03", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "E-COMPLEX", 
+		"latitude": 42.7284, 
+		"location group": "North", 
+		"event #": "16-11-03-023380", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-03"
+	},{
+		"date reported": "2016-11-10", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "RUSSELL SAGE LABORATORY", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-10-023993", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-10"
+	},{
+		"date reported": "2016-11-16", 
+		"incident_type": "FIRE - FIRE ALARM/SMOKE CONDITION I.E. COOKING", 
+		"location": "BARTON HALL", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-16-024500", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-16"
+	},{
+		"date reported": "2016-11-10", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "City Station", 
+		"latitude": 42.7284, 
+		"location group": "West", 
+		"event #": "16-11-10-024013", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-10"
+	},{
+		"date reported": "2016-11-05", 
+		"incident_type": "CRIMINAL-NYSPL-LARC - LARCENY FROM MOTOR VEHICLE", 
+		"location": "Blitman Residence Commons", 
+		"latitude": 42.7284, 
+		"location group": "North", 
+		"event #": "16-11-05-023542", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-05"
+	},{
+		"date reported": "2016-11-13", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "RENSSELAER UNION", 
+		"latitude": 42.742551, 
+		"location group": "RPI", 
+		"event #": "16-11-13-024181", 
+		"longitude": -73.675386, 
+		"date_occurred": "2016-11-13"
+	},{
+		"date reported": "2016-11-13", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "QUADRANGLE DORMS", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-13-024232", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-13"
+	},{
+		"date reported": "2016-11-07", 
+		"incident_type": "CRIMINAL-NYSPL-LARC - LARCENY FROM BUILDING", 
+		"location": "DEPARTMENT OF PUBLIC SAFETY", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-07-023762", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-07"
+	},{
+		"date reported": "2016-11-02", 
+		"incident_type": "CRIMINAL-NYSPL - CRIMINAL MISCHIEF", 
+		"location": "COMMONS DINING HALL (FRES", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-02-023325", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-02"
+	},{
+		"date reported": "2016-11-05", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "BRAY HALL", 
+		"latitude": 40.730019, 
+		"location group": "RPI", 
+		"event #": "16-11-05-023529", 
+		"longitude": -73.705505, 
+		"date_occurred": "2016-11-05"
+	},{
+		"date reported": "2016-11-09", 
+		"incident_type": "FIRE - FIRE ALARM - ACTUAL FIRE", 
+		"location": "EAST CAMPUS ATHLETIC VILLAGE", 
+		"latitude": 42.732669, 
+		"location group": "RPI", 
+		"event #": "16-11-09-023940", 
+		"longitude": -73.667571, 
+		"date_occurred": "2016-11-09"
+	},{
+		"date reported": "2016-11-02", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "NED HARKNESS ATHLETIC FIE", 
+		"latitude": 42.742578, 
+		"location group": "RPI", 
+		"event #": "16-11-02-023360", 
+		"longitude": -73.619155, 
+		"date_occurred": "2016-11-02"
+	},{
+		"date reported": "2016-11-03", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "RENSSELAER UNION", 
+		"latitude": 42.742551, 
+		"location group": "RPI", 
+		"event #": "16-11-03-023440", 
+		"longitude": -73.675386, 
+		"date_occurred": "2016-11-03"
+	},{
+		"date reported": "2016-11-12", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "HOUSTON FIELD HOUSE", 
+		"latitude": 42.732056, 
+		"location group": "RPI", 
+		"event #": "16-11-12-024137", 
+		"longitude": -73.669553, 
+		"date_occurred": "2016-11-12"
+	},{
+		"date reported": "2016-11-03", 
+		"incident_type": "CRIMINAL-NYSPL-LARC - LARCENY FROM BUILDING", 
+		"location": "GYMNASIUM, '87", 
+		"latitude": 42.7284, 
+		"location group": "North", 
+		"event #": "16-11-03-023379", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-03"
+	},{
+		"date reported": "2016-11-13", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "E-COMPLEX", 
+		"latitude": 42.7284, 
+		"location group": "North", 
+		"event #": "16-11-13-024240", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-13"
+	},{
+		"date reported": "2016-11-05", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "BRINSMADE TERRACE", 
+		"latitude": 42.734728, 
+		"location group": "RPI", 
+		"event #": "16-11-05-023591", 
+		"longitude": -73.665438, 
+		"date_occurred": "2016-11-05"
+	},{
+		"date reported": "2016-11-14", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "BURDETT AVENUE RESIDENCE", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-14-024340", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-14"
+	},{
+		"date reported": "2016-11-05", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "BRAY HALL", 
+		"latitude": 40.730019, 
+		"location group": "RPI", 
+		"event #": "16-11-05-023572", 
+		"longitude": -73.705505, 
+		"date_occurred": "2016-11-05"
+	},{
+		"date reported": "2016-11-06", 
+		"incident_type": "INVESTIGATION - INTOXICATION", 
+		"location": "CROCKETT HALL", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-06-023636", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-06"
+	},{
+		"date reported": "2016-11-14", 
+		"incident_type": "INVESTIGATION - PROPERTY DAMAGE AUTO ACCIDENT", 
+		"location": "COMMONS DINING HALL (FRES", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-14-024308", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-14"
+	},{
+		"date reported": "2016-11-08", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "POLYTECH APARTMENTS", 
+		"latitude": 42.7284, 
+		"location group": "West", 
+		"event #": "16-11-08-023851", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-08"
+	},{
+		"date reported": "2016-11-14", 
+		"incident_type": "CRIMINAL-NYSPL-LARC - ALL OTHERS", 
+		"location": "BURDETT AVENUE RESIDENCE", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-14-024322", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-14"
+	},{
+		"date reported": "2016-11-09", 
+		"incident_type": "INVESTIGATION - DOMESTIC", 
+		"location": "OTHER OFF-CAMPUS LOCATION", 
+		"latitude": 42.7284, 
+		"location group": "Off Campus", 
+		"event #": "16-11-09-023951", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-09"
+	},{
+		"date reported": "2016-11-17", 
+		"incident_type": "FIRE - FIRE ALARM/SMOKE CONDITION I.E. COOKING", 
+		"location": "QUADRANGLE DORMS", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-17-024511", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-17"
+	},{
+		"date reported": "2016-11-01", 
+		"incident_type": "INVESTIGATION - PROPERTY DAMAGE AUTO ACCIDENT", 
+		"location": "CAMPUS PARKING, NORTH LOT", 
+		"latitude": 42.7284, 
+		"location group": "North", 
+		"event #": "16-11-01-023264", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-01"
+	},{
+		"date reported": "2016-11-01", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "BRINSMADE TERRACE", 
+		"latitude": 42.734728, 
+		"location group": "RPI", 
+		"event #": "16-11-01-023257", 
+		"longitude": -73.665438, 
+		"date_occurred": "2016-11-01"
+	},{
+		"date reported": "2016-11-09", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "RAHPS - ALBRIGHT", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-09-023915", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-09"
+	},{
+		"date reported": "2016-11-09", 
+		"incident_type": "CRIMINAL-NYSPL - ASSAULT/MISDEMEANOR", 
+		"location": "DEPARTMENT OF PUBLIC SAFETY", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-09-023937", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-09"
+	},{
+		"date reported": "2016-11-17", 
+		"incident_type": "INVESTIGATION - PROPERTY DAMAGE AUTO ACCIDENT", 
+		"location": "HEFFNER ALUMNI HOUSE", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-17-024550", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-17"
+	},{
+		"date reported": "2016-11-12", 
+		"incident_type": "- Fire Alarm Activation", 
+		"location": "QUADRANGLE DORMS", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-12-024143", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-12"
+	},{
+		"date reported": "2016-11-04", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "JONSSON ENGINEERING CENTE", 
+		"latitude": 42.7297, 
+		"location group": "RPI", 
+		"event #": "16-11-04-023502", 
+		"longitude": -73.6803, 
+		"date_occurred": "2016-11-04"
+	},{
+		"date reported": "2016-11-12", 
+		"incident_type": "INVESTIGATION - Medical incident/EMS", 
+		"location": "SPORTS CENTER AND ROBISON", 
+		"latitude": 42.7284, 
+		"location group": "RPI", 
+		"event #": "16-11-12-024148", 
+		"longitude": -73.6918, 
+		"date_occurred": "2016-11-12"
+	}
+]

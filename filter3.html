@@ -22,7 +22,11 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
-
+	<script src="/js/leaflet-0.7.2/leaflet.ajax.min.js"></script>
+	<script type="text/javascript" src="oms.min.js"></script>
+	<link rel="stylesheet" href="../dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+	<script src="../dist/leaflet.markercluster-src.js"></script>
 
 	<style>
 		#map {
@@ -37,82 +41,185 @@
 <div id='map'></div>
 
 <script>
-/*
-	function getArray(){
-		return $.getJSON('questions.json');
-	}
-	$.getJSON('tests1.json', function (json) {
-	var array = [];
-	for (var key in json) {
-		if (json.hasOwnProperty(key)) {
-			var item = json[key];
-			array.push({
-				date: item.Name,
-				incident: item.incident,
-				location: item.location,
-				disposition: item.disposition
-			});            
-		}
-	}
-	});
-	*/
-	var locations = new L.LayerGroup();
-	var lul = new L.LayerGroup();
-
-	L.marker([39.61, -105.02], {icon: new L.Icon.Default()}).bindPopup('This is Littleton, CO.').addTo(locations),
-	L.marker([39.74, -104.99], {icon: new L.Icon.Default()}).bindPopup('This is Denver, CO.').addTo(locations),
-	L.marker([39.73, -104.8], {icon: new L.Icon.Default()}).bindPopup('This is Aurora, CO.').addTo(locations),
-	L.marker([39.77, -105.23], {icon: new L.Icon.Default()}).bindPopup('This is Golden, CO.').addTo(locations);
-	
-	var markers = [
-	   [ -105.4, 39.64, "Big Ben" ],
-	   [ -104.86, 39.72, "London Eye" ],
-	   [ -105.14, 39.82, "Nelson's Column<br><a href=\"https://en.wikipedia.org/wiki/Nelson's_Column\">wp</a>" ] 
-	];
-	var icon_lul = L.AwesomeMarkers.icon({
-		icon: 'cloud',
-		iconColor: 'white',
-		markerColor: 'pink',
-		prefix: 'glyphicon',
-		extraClasses: 'fa-rotate-0'
-	});
-	
-	for (var i=0; i<markers.length; i++) {
-		var lon = markers[i][0];
-		var lat = markers[i][1];
-		var popupText = markers[i][2];
-		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(lul);
-		marker.bindPopup(popupText);
-		marker.setIcon(icon_lul);
+	var JsonStuff = [];
+        $.ajax({
+            async: false,
+            url: 'incidents.json',
+            data: "",
+            accepts:'application/json',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    JsonStuff.push( data[i]);
+                }
+            }
+        });
+        
+        
+        var RPI = new L.LayerGroup();
+		var north = new L.LayerGroup();
+		var south = new L.LayerGroup();
+		var east = new L.LayerGroup();
+		var west = new L.LayerGroup();
+		var RPIMarkers = [];
+		var northMarkers = [];
+		var southMarkers = [];
+		var eastMarkers = [];
+		var westMarkers = [];
+        //console.log(JsonStuff.length)
+        for (var j = 0; j < JsonStuff.length; j++){
+            //console.log(JsonStuff[j].location)
+            if (JsonStuff[j]['location group'] == 'RPI'){
+                //console.log(JsonStuff[j].lon);
+                RPIMarkers.push([JsonStuff[j].latitude, JsonStuff[j].longitude, JsonStuff[j].incident_type])
+            }
+			else if (JsonStuff[j]['location group'] == 'North'){
+                //console.log(JsonStuff[j].lon);
+                northMarkers.push([JsonStuff[j].latitude, JsonStuff[j].longitude, JsonStuff[j].incident_type])
+            }
+			else if (JsonStuff[j]['location group'] == 'South'){
+                //console.log(JsonStuff[j].lon);
+                southMarkers.push([JsonStuff[j].latitude, JsonStuff[j].longitude, JsonStuff[j].incident_type])
+            }
+			else if (JsonStuff[j]['location group'] == 'East'){
+                //console.log(JsonStuff[j].lon);
+                eastMarkers.push([JsonStuff[j].latitude, JsonStuff[j].longitude, JsonStuff[j].incident_type])
+            }
+			else if (JsonStuff[j]['location group'] == 'West'){
+                //console.log(JsonStuff[j].lon);
+                westMarkers.push([JsonStuff[j].latitude, JsonStuff[j].longitude, JsonStuff[j].incident_type])
+            }
+        }
+        console.log(JsonStuff.length)
+        var iconNorth = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'pink',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+		var iconSouth = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'purple',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+		var iconEast = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'green',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+		var iconWest = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'yellow',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
+        var iconRPI = L.AwesomeMarkers.icon({
+            icon: 'none',
+            markerColor: 'blue',
+            prefix: 'glyphicon',
+            extraClasses: 'fa-rotate-0'
+        });
 		
-	}
+		
+		
+		var map = L.map('map', {
+            center: [42.730105,-73.6771229],
+            zoom: 15,
+            layers: [RPI, north, south, east, west]
+        });
+		
+		var oms = new OverlappingMarkerSpiderfier(map);
+		var popup = new L.Popup({closeButton: false, offset: new L.Point(0.5, -24)});
+		oms.addListener('click', function(marker) {
+		  popup.setContent(marker.desc);
+		  popup.setLatLng(marker.getLatLng());
+		  map.openPopup(popup);
+		});
+		
+        for (var i=0; i<RPIMarkers.length; i++) {
+            var lat = RPIMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = RPIMarkers[i][1];
+            var popupText = RPIMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(RPI);
+            marker.setIcon(iconRPI);
+			oms.addMarker(marker);
+        }
+		for (var i=0; i<northMarkers.length; i++) {
+            var lat = northMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = northMarkers[i][1];
+            var popupText = northMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(north);
+            marker.setIcon(iconNorth);
+			oms.addMarker(marker);
+        }
+		for (var i=0; i<southMarkers.length; i++) {
+            var lat = southMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = southMarkers[i][1];
+            var popupText = southMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(south);
+            marker.setIcon(iconSouth);
+			oms.addMarker(marker);
+        }
+		for (var i=0; i<eastMarkers.length; i++) {
+            var lat = eastMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = eastMarkers[i][1];
+            var popupText = eastMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(east);
+            marker.setIcon(iconEast);
+			oms.addMarker(marker);
+        }
+		for (var i=0; i<westMarkers.length; i++) {
+            var lat = westMarkers[i][0];
+            //console.log(JsonStuff[i].lon)
+            var lon = westMarkers[i][1];
+            var popupText = westMarkers[i][2];
+            var markerLocation = new L.LatLng(lat, lon);
+            var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(west);
+            marker.setIcon(iconWest);
+			oms.addMarker(marker);
+        }
 
 
-	var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-		mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+        var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
 
-	var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
-	
-	var map = L.map('map', {
-		center: [39.73, -104.99],
-		zoom: 10,
-		layers: [locations]
-	});
-	L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
-	//L.tileLayer(mbUrl,{id: 'base', attribution: mbAttr}).addTo(map);
-	var baseLayers = {
-		"Streets": streets
-	};
+        var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+        
+		var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+        map.options.maxZoom = 17;
+        map.options.minZoom = 15;
 
-	var overlays = {
-		"locations": locations,
-		"lul": lul
-	};
+        L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
+        //map.addControl(L.control.fractionalZoom({position: 'topright', zoomIncrement:.1}));
+        var baseLayers = {
+            "Select Location Areas:": streets
+        };
 
-	L.control.layers(baseLayers, overlays).addTo(map);
+        var overlays = {
+            "RPI": RPI,
+			"North": north,
+			"South": south,
+			"East": east,
+			"West": west
+        };
+		
+		markers.on('clusterclick', function (a) {
+			a.layer.spiderfy();
+		});
+
+        L.control.layers(baseLayers, overlays).addTo(map);
 </script>
 
 
