@@ -4,4 +4,6 @@ python:
 sudo: required
 install: pip install -r requirements.txt
 services: mongodb
-script: pytest main.py
+script:
+  - pytest main.py
+  - pytest incident_generator_class.py
