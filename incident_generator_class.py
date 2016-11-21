@@ -30,14 +30,14 @@ class Incident:
 class LocationData():
     def __init__(self):
 
-        self.north = {"GYMNASIUM, '87", "CAMPUS PARKING, NORTH LOT", "E-COMPLEX", "COLONIE APARTMENTS", "Heffner", "J-BUILDING", "SAGE AVENUE", "BLITMAN RESIDENCE COMMONS"}
+        self.north = {"GYMNASIUM, '87", "CAMPUS PARKING, NORTH LOT", "E-COMPLEX", "COLONIE APARTMENTS", "HEFFNER ALUMNI HOUSE", "J-BUILDING", "SAGE AVENUE", "BLITMAN RESIDENCE COMMONS"}
 
-        self.east = {"EAST CAMPUS ATHLETIC VILLAGE", "HOUSTON FIELD HOUSE", "BURDETT AVENUE RESIDENCE", "DAVISON HALL", "NASON HALL", "CROCKETT HALL", "BARTON HALL", "RENSSELAER UNION", "BRAY HALL" "RAHPS - ALBRIGHT", "RAHPS-B", "COMMONS DINING HALL (FRES", "COMMONS PARKING", "Robinson Pool", "MUELLER CENTER", "QUADRANGLE DORMS", "DEPARTMENT OF PUBLIC SAFETY", "NED HARKNESS ATHLETIC FIE", "STACWYCK - MCGIFFERT", "Sherry Road", "BRYCKWYCK APARTMENTS", "WARREN HALL", "Cary Hall", "BRINSMADE TERRACE", "Sharp Hall", "Critical Facility", "NUGENT HALL"}
+        self.east = {"EAST CAMPUS ATHLETIC VILLAGE", "HOUSTON FIELD HOUSE", "BURDETT AVENUE RESIDENCE", "DAVISON HALL", "NASON HALL", "CROCKETT HALL", "BARTON HALL", "RENSSELAER UNION", "BRAY HALL" "RAHPS - ALBRIGHT", "RAHPS-B", "COMMONS DINING HALL (FRES", "COMMONS PARKING", "Robinson Pool", "MUELLER CENTER", "QUADRANGLE DORMS", "DEPARTMENT OF PUBLIC SAFETY", "NED HARKNESS ATHLETIC FIE", "STACWYCK - MCGIFFERT", "Sherry Road", "BRYCKWYCK APARTMENTS", "WARREN HALL", "CARY HALL", "BRINSMADE TERRACE", "Sharp Hall", "RENSSELAER CRITICAL FACIL", "NUGENT HALL", "STACWYCK-ROUSSEAU", "STACWYCK - WILTSIE", "PUBLIC SAFETY OFFICE", "H- BUILDING"}
 
-        self.off = {"OTHER OFF-CAMPUS LOCATION", "BEMAN LANE"}
-        self.west = {"POLYTECH APARTMENTS", "CITY STATION", "CAMPUS PARKING, WEST LOT", "EMPAC BUILDING"}
+        self.off = {"OTHER OFF-CAMPUS LOCATION", "BEMAN LANE", "SHERRY ROAD"}
+        self.west = {"POLYTECH APARTMENTS", "CITY STATION", "CAMPUS PARKING, WEST LOT", "EMPAC BUILDING", "WEST HALL"}
         self.south = {"MOE'S SOUTHWEST GRILL"}
-        self.academic = {"RUSSELL SAGE LABORATORY", "COGSWELL LABORATORY", "GREENE BUILDING", "JONSSON ENGINEERING CENTE", "ACADEMY HALL"}
+        self.academic = {"RUSSELL SAGE LABORATORY", "COGSWELL LABORATORY", "GREENE BUILDING", "JONSSON ENGINEERING CENTE", "ACADEMY HALL", "BIOTECH"}
         self.default_group = "RPI"
 
     def locationGroup(self, loc):
@@ -137,24 +137,24 @@ class IncidentToJson():
     def __init__(self):
         pass
 
-    def dumpJSON(self, file_obj, incid_dic):
+    def dumpJSON(self, file_obj, incid_dic_list):
         #docs_list = list(incid_dic)
-        json_docs = json.dumps(incid_dic, indent = 4)
+        json_docs = json.dumps(incid_dic_list, indent = 4)
         file_obj.write(json_docs)
 
     def createJson(self, incidents):
 
         fname = 'incidents.json'
-
+        incid_dic_list = []
 
         with open(fname, 'w') as json_file:
             for incid in incidents:
 
                 incid_dic = {'event #': incid.event_num, 'incident_type': incid.incident_type, 'location': incid.location.location_name, 'location group': incid.location.location_group, 'latitude': incid.location.lat, "longitude": incid.location.long, 'date reported': incid.date_reported.isoformat(), 'date_occurred': incid.date_occurred.isoformat()}
 
-                print(incid_dic)
-                self.dumpJSON(json_file, incid_dic)
-
+                incid_dic_list.append(incid_dic)
+                
+        self.dumpJSON(json_file, incid_dic_list)
         json_file.close()
 
         return fname
@@ -176,7 +176,7 @@ class IncidentCache:
 
     def setCacheByDate(self, _begin_date, _end_date):
         assert(_begin_date < _end_date)
-        assert(_begin_date <= date.today() and _end_date <= date.today())
+        
         
         if (len(self.incidents) == 0):
             self.begin_date = _begin_date
@@ -226,7 +226,6 @@ def getCacheJsonByMonth(month):
     db_initial.runDB()
     cache = IncidentCache()
 
-    
     cache.assignJsonFiles(db_initial.filename())
     r = cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
     assert(r == 0)
