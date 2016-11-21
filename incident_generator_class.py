@@ -22,14 +22,12 @@ class Incident:
         self.event_num = _event_num #int
         self.incident_type = _incident_type #string
         self.location = _location #location description
-        #self.event_description = _description #string
 
         ##just use python built-in date objects for these::
         self.date_reported = _date_reported #datetime.date
         self.date_occurred = _date_occurred #datetime.date
 
 class LocationData():
-
     def __init__(self):
 
         self.north = {"GYMNASIUM, '87", "CAMPUS PARKING, NORTH LOT", "E-COMPLEX", "COLONIE APARTMENTS", "Heffner", "J-BUILDING", "SAGE AVENUE", "BLITMAN RESIDENCE COMMONS"}
@@ -41,9 +39,10 @@ class LocationData():
         self.south = {"MOE'S SOUTHWEST GRILL"}
         self.academic = {"RUSSELL SAGE LABORATORY", "COGSWELL LABORATORY", "GREENE BUILDING", "JONSSON ENGINEERING CENTE", "ACADEMY HALL"}
         self.default_group = "RPI"
-        #self.missing_coords = {}
 
     def locationGroup(self, loc):
+        assert(loc != "")
+        
         if(loc in self.north): return "North"
         elif(loc in self.off): return "Off Campus"
         elif(loc in self.west): return "West"
@@ -53,21 +52,24 @@ class LocationData():
 
 
 class JsonToIncident:
-
     def __init__(self):
         self.begin_date = date(2016, 10, 1)
         self.end_date = date(2016, 10, 31)
-
 
         self.location_data = LocationData()
         self.json_files = {}
 
     def setJsonFiles(self, files):
         self.json_files = files
-
+        return 0
+        
     #returns list of dictionaries for months matching date range
     def getJsonDic(self):
         json_dic_list = [] #list of dictionaries with all json files of specified date range
+        
+        assert(self.begin_date)
+        assert(self.end_date)
+        
         m = self.begin_date.month
         y = self.begin_date.year
 
@@ -94,11 +96,10 @@ class JsonToIncident:
 
 
     def createIncidents(self):
-
         incidents = {}
 
         incid = self.getJsonDic()
-
+        assert(len(incid) > 0)
         d = self.begin_date
         i = 0
 
@@ -116,6 +117,8 @@ class JsonToIncident:
                 date_reported = date(2000 + int(inc_date_rep[2]), int(inc_date_rep[0]), int(inc_date_rep[1]))
 
                 loc = Location(inc['location'], self.assignLocationGroup(inc['location']))
+                
+                loc.setCoords(inc['coordinates'][0], inc['coordinates'][1])
                 inc_obj = Incident(inc['event #'], incid[i]['incident'], loc, date_occurred, date_reported)
 
                 incidents[inc['event #']] = inc_obj
@@ -141,7 +144,7 @@ class IncidentToJson():
 
     def createJson(self, incidents):
 
-        fname = 'incidents.txt'
+        fname = 'incidents.json'
 
 
         with open(fname, 'w') as json_file:
@@ -168,25 +171,32 @@ class IncidentCache:
         self.JtoI = JsonToIncident()
 
     def assignJsonFiles(self, files):
-        self.JtoI.setJsonFiles(files)
+        r = self.JtoI.setJsonFiles(files)
+        assert(r == 0)
 
     def setCacheByDate(self, _begin_date, _end_date):
-
+        assert(_begin_date < _end_date)
+        assert(_begin_date <= date.today() and _end_date <= date.today())
+        
         if (len(self.incidents) == 0):
             self.begin_date = _begin_date
             self.end_date = _end_date
             self.fullyPopulateCache()
         elif (_begin_date == self.begin_date and _end_date == self.end_date):
-            return
+            return 0
         else:
             self._setCacheByDate(_begin_date, _end_date)
+        return 0
 
     def fullyPopulateCache(self):
+        assert(self.begin_date)
+        assert(self.end_date)
+        assert(self.begin_date <= self.end_date)
+        
         self.JtoI.setDateRange(self.begin_date, self.end_date)
         self.incidents = self.JtoI.createIncidents()
 
     def _setCacheByDate(self, new_begin, new_end):
-
 
         assert(new_begin <= date.today() and new_end <= date.today())
 
@@ -216,11 +226,10 @@ def getCacheJsonByMonth(month):
     db_initial.runDB()
     cache = IncidentCache()
 
-    print db_initial.filename()
+    
     cache.assignJsonFiles(db_initial.filename())
-    cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
-
+    r = cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
+    assert(r == 0)
     ItoJ = IncidentToJson()
 
     return ItoJ.createJson(cache.incidents)
-
