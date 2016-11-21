@@ -94,6 +94,7 @@ def createDatabase():
 
 	return 0
 
+#dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
 def dumpJSON():
 	f = open("{fn}.json".format(fn = __dateFormat), "w+")
     	docsList = list(__posts.find())
@@ -102,6 +103,7 @@ def dumpJSON():
     	f.close()
     	return 0
 
+#returns the filename of the JSON created in the function above along with the month and year in number, number tuple
 def filename():
 	year = datetime.datetime.now().year
 	month = datetime.datetime.now().month
@@ -109,12 +111,14 @@ def filename():
 	desireable = {(month, year) : "{fn}.json".format(fn=filename)}
 	return desireable
 
+#assert statements to test the file's functions
 def testDB():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
     	assert isinstance(filename(), dict)
 
+#how another file can populate the database and dump the JSON
 def runDB():
 	#print __dateFormat
 	result = __posts.delete_many({})
@@ -122,4 +126,5 @@ def runDB():
     	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
     	createDatabase()
     	dumpJSON()
+    	return 0
     	#print filename()
