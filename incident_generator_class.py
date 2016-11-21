@@ -42,7 +42,7 @@ class LocationData():
 
     def locationGroup(self, loc):
         assert(loc != "")
-        
+
         if(loc in self.north): return "North"
         elif(loc in self.off): return "Off Campus"
         elif(loc in self.west): return "West"
@@ -62,14 +62,14 @@ class JsonToIncident:
     def setJsonFiles(self, files):
         self.json_files = files
         return 0
-        
+
     #returns list of dictionaries for months matching date range
     def getJsonDic(self):
         json_dic_list = [] #list of dictionaries with all json files of specified date range
-        
+
         assert(self.begin_date)
         assert(self.end_date)
-        
+
         m = self.begin_date.month
         y = self.begin_date.year
 
@@ -117,7 +117,7 @@ class JsonToIncident:
                 date_reported = date(2000 + int(inc_date_rep[2]), int(inc_date_rep[0]), int(inc_date_rep[1]))
 
                 loc = Location(inc['location'], self.assignLocationGroup(inc['location']))
-                
+
                 loc.setCoords(inc['coordinates'][0], inc['coordinates'][1])
                 inc_obj = Incident(inc['event #'], incid[i]['incident'], loc, date_occurred, date_reported)
 
@@ -153,8 +153,8 @@ class IncidentToJson():
                 incid_dic = {'event #': incid.event_num, 'incident_type': incid.incident_type, 'location': incid.location.location_name, 'location group': incid.location.location_group, 'latitude': incid.location.lat, "longitude": incid.location.long, 'date reported': incid.date_reported.isoformat(), 'date_occurred': incid.date_occurred.isoformat()}
 
                 incid_dic_list.append(incid_dic)
-                
-        self.dumpJSON(json_file, incid_dic_list)
+
+            self.dumpJSON(json_file, incid_dic_list)
         json_file.close()
 
         return fname
@@ -176,8 +176,8 @@ class IncidentCache:
 
     def setCacheByDate(self, _begin_date, _end_date):
         assert(_begin_date < _end_date)
-        
-        
+
+
         if (len(self.incidents) == 0):
             self.begin_date = _begin_date
             self.end_date = _end_date
@@ -192,7 +192,7 @@ class IncidentCache:
         assert(self.begin_date)
         assert(self.end_date)
         assert(self.begin_date <= self.end_date)
-        
+
         self.JtoI.setDateRange(self.begin_date, self.end_date)
         self.incidents = self.JtoI.createIncidents()
 
