@@ -4,8 +4,8 @@
 import sys
 import json
 import os
-#import pytest
-#import db_initial
+
+import db_initial
 from datetime import date
 from datetime import time
 
@@ -254,8 +254,8 @@ def getCacheJsonByMonth(month):
     cache = IncidentCache()
 
     cache.assignJsonFiles(db_initial.filename())
-    cache.assignJsonFiles({(11,2016): "NOV_16.JSON"})
-    r = cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
+    
+    cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
     testCachePopulated(cache)
     
     ItoJ = IncidentToJson()
