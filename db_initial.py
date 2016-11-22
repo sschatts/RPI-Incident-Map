@@ -1,3 +1,6 @@
+#Initializes the database by downloading/converting files from Pub Safe and then populating the database with the extracted information. It then dumps the JSON from the database for use by incident_generator_class.py.
+#Written for RPI Incident Map
+
 import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest
 from pymongo import MongoClient
 from mapbox import Geocoder
