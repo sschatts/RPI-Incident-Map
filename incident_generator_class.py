@@ -234,7 +234,6 @@ class IncidentCache:
 
         self.incidents = new_incidents
 
-
 #Test to make sure that json file was successfully made and is not empty
 def testJsonSuccessfullyCreated():
     cache = IncidentCache()
@@ -250,6 +249,7 @@ def testCacheCreated():
     cache.assignJsonFiles(db_initial.filename())
     cache.setCacheByDate(date(2016, 11, 1), date(2016, 11, 30))
     assert(len(cache.incidents) > 0)
+
 
 #Called by front end to create cache,  occupy, and create JSON for given month value
 def getCacheJsonByMonth(month):
