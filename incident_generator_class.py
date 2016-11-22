@@ -243,8 +243,9 @@ def testJsonSuccessfullyCreated(jsonOutputFile):
     assert(os.stat(jsonOutputFile).st_size > 0)
     
 #test to be sure that cache is not empty before trying to make json from its contents    
-def testCachePopulated(cache):      
-    assert(len(cache.incidents) > 0)
+def testCachePopulated(cache): 
+    incid = cache.incidents
+    assert(len(incid) > 0)
     
 
 #called by front end to create cache,  occupy, and create JSON for given month value
