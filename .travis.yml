@@ -6,7 +6,9 @@ python:
 #Sudo is required to install the dependencies
 sudo: required
 #Calls pip (the python package installer) on requirements.txt. The text file isn't possible to be commented since its plain text however it only contains the packages that pip will install
-install: pip install -r requirements.txt
+install:
+  - pip install -r requirements.txt
+  - mkdir ./pdfs
 #Start the mongodb database that will be connected to
 services: mongodb
 #This is the test script that is run on the code. pytest is used to activate and monitor assert statements in python code
