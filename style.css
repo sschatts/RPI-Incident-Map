@@ -3,17 +3,20 @@ body {
 	padding:0; 
 	font-family:'Raleway';
 }
+/*map ID will take up the whole screen*/
 #map { 
 	position:absolute; 
 	top:0; 
 	bottom:0; 
 	width:100%; 
 }
-#title_box_words {  
+/*the lines for the Title Box*/
+#titleBoxWords {  
 	border-bottom:3px #2A2A2A solid; 
 	border-top:3px #2A2A2A solid;
 }
-#title_box { 
+/*Set the title box to be 33% of the screen*/
+#titleBox { 
 	position:relative; 
 	top:15; 
 	width:33%; 
@@ -21,24 +24,31 @@ body {
 	margin:25px;
 	padding:5px 0 5px 0;
 }
-#title_box h1 { 
+/*Styling for the website title*/
+#titleBox h1 { 
 	text-align:center; 
 	color:#B90909;
 	margin:15px 0px 8px 0px;
 }
-#title_box h5 {
+/*Styling for the description of website*/
+#titleBox h5 {
 	text-align:center; 
 	color:#2A2A2A;
 	font-style: italic;
 	margin:0px 0px 15px 0px;
 }
-#filter_box_words {
+/*line in the Filter box section*/
+#filterBoxWords {
 	border-top:3px #2A2A2A solid;
 }
-#filter_box_words h2 {
-	margin: 5px;
+/*Styling for the title 'Filters Options'*/
+#filterBoxWords h2 {
+	margin:15px 5px 25px 5px;
+	padding-left: 30px;
+	color:#2A2A2A;
 }
-#filter_box {
+/*Styling for the Filters div on the bottom of the screen*/
+#filterBox {
 	position:absolute; 
 	width:100%;
 	bottom:0%;
@@ -46,132 +56,58 @@ body {
 	margin-top: 10px;
 	padding:5px 0 5px 0;
 }
-.white_back {
-	position:relative; 
-	width:100%;
-	bottom:0%;
-	background-color:#FFF;
-	padding:10px 0 5px 0;
-	margin-bottom: 2px;
-	display: block;
+/*Filter options margin*/
+.filterOptions {
+	margin-top: 20px;
+	margin-bottom: 40px;
+	text-align: center;
 }
-#filter_box_words h2 {
-	padding-left: 30px;
-	color:#2A2A2A;
-}
-.selection {
-	position: relative;
-    display: inline-block;
-	float:left;
-	
-}
-.selection p {
+/*The button for the filter options*/
+.overlaybutton {
 	display: inline;
-}
-.arrow_down {
-  	width: 0; 
- 	height: 50%; 
-	border-left: 8px solid transparent;
-	border-right: 8px solid transparent;
-	display: inline;
-	float:right;
-	border-top: 8px solid #2A2A2A;
-	margin-left: 10px;
-	margin-top: 6px;
-}
-
-.arrow_down:hover, .arrow_down:focus {
- 	width: 0; 
- 	height: 50%; 
-	border-left: 8px solid transparent;
-	border-right: 8px solid transparent;
-	display: inline;
-	float:right;
-	border-top: 8px solid #FFF;
-	margin-left: 10px;
-	margin-top: 6px;
-}
-
-.drop_content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-}
-
-.drop_content ul {
-	list-style: none;
-}
-
-.dropbtn {
-	display: block;
 	position: relative;
 	text-align: center;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
+    padding: 10px 45px 10px 45px;
     cursor: pointer;
-    margin: 0 50px 20px 30px;
+    margin: 0px 60px 20px 30px;
 	background-color:#EDEDED;
 	border-bottom: 3px rgba(211, 211, 211, 0.5) solid;
 	border-right: 3px rgba(211, 211, 211, 0.5) solid;
 }
-
-.dropbtn:hover, .dropbtn:focus {
-    background-color: #D3D3D3;
+/*change the background on the hover over and on focus*/
+.overlaybutton:hover, .overlaybutton:focus {
+    background-color: #D5D5D5;
     color: white;
     border-bottom: 3px rgba(211, 211, 211, 0.9) solid;
 	border-right: 3px rgba(211, 211, 211, 0.9) solid;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    height: 100%;
-    width: 0;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    background-color: rgb(0,0,0); /* Black fallback color */
-    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
-    overflow-x: hidden; /* Disable horizontal scroll */
-}
-
-.dropdown-content a {
-    position: relative;
-    top: 25%; /* 25% from the top */
-    width: 100%; /* 100% width */
-    text-align: center; /* Centered text/links */
-    margin-top: 30px; 
-}
-
-.dropdown-content a:hover {background-color: #f1f1f1}
-
 .overlay {
-    /* Height & width depends on how you want to reveal the overlay (see JS below) */    
+    top: 0%;
+    left: 0%;
     height: 100%;
     width: 0;
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    background-color: rgb(0,0,0); /* Black fallback color */
-    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
-    overflow-x: hidden; /* Disable horizontal scroll */
-    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+    position: fixed; 
+    z-index: 1; 
+    background-color: rgba(0,0,0, 0.9); 
+    overflow-x: hidden; 
+    transition: 0.3s;
 }
 
 /* Position the content inside the overlay */
-.overlay-content2, .overlay-content {
+.overlayContentType, .overlayContentLocation {
     position: relative;
-    top: 25%; /* 25% from the top */
-    width: 100%; /* 100% width */
-    text-align: center; /* Centered text/links */
-    margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+    top: 10%; 
+    width: 100%; 
+    text-align: center;
+    margin-top: 30px;
+}
+
+.overlayContentDate {
+    position: relative;
+    top: 15%; 
+    width: 100%; 
+    text-align: center;
 }
 
 /* The navigation links inside the overlay */
@@ -180,15 +116,23 @@ body {
     text-decoration: none;
     font-size: 36px;
     color: #818181;
-    display: block; /* Display block instead of inline */
-    transition: 0.3s; /* Transition effects on hover (color) */
+    display: block; 
+    transition: 0.1s; 
+    font-size: 23px;
 }
-
+/* The navigation links inside the date overlay */
+.overlay .overlayContentDate a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block; 
+    transition: 0.3s;
+}
 /* When you mouse over the navigation links, change their color */
 .overlay a:hover, .overlay a:focus {
     color: #f1f1f1;
 }
-
 /* Position the close button (top right corner) */
 .overlay .closebtn {
     position: absolute;
@@ -196,13 +140,16 @@ body {
     right: 45px;
     font-size: 60px;
 }
+/*get ride of radio button*/
 
-/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
-@media screen and (max-height: 450px) {
-    .overlay a {font-size: 20px}
-    .overlay .closebtn {
-        font-size: 40px;
-        top: 15px;
-        right: 35px;
-    }
+
+input[type=radio]:not(old){
+  width   : 0px;
+  margin  : 0;
+  padding : 0;
+  opacity : 0;
+}
+ 
+div .leaflet-popup-tip-container {
+	margin-right: 130px;
 }
