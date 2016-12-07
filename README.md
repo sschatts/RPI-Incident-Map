@@ -14,8 +14,14 @@ RPI Incident Map is hosted on [AWS](http://rpiincidentmap.com/).
 - [Git](https://git-scm.com/)
 - [mongoDB](https://www.mongodb.com/)
 
+## Features
+- Displaying the pins on the map based on the location they occurred.
+- Selecting functionality based on location, type of incident or month they occured.
+- Able to zoom and move functionality on the map.
+- Contact information available for RPI Public Safety.
+
 ## Automated Testing
-Use Travis.ci for our testing. Repo gets tested on every build.
+Use Travis CI for our testing. Repo gets tested on every build.
 
 ## Coding Standards
 1. We are using tabs instead of spaces to ensure we are staying consistent across the different files in the repository.
