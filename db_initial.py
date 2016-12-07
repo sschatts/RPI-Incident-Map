@@ -1,7 +1,7 @@
 #Initializes the database by downloading/converting files from Pub Safe and then populating the database with the extracted information. It then dumps the JSON from the database for use by incident_generator_class.py.
 #Written for RPI Incident Map
 
-import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest
+import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest, urlparse, lxml.html
 from pymongo import MongoClient
 from mapbox import Geocoder
 from bson import Binary, Code, json_util
@@ -18,17 +18,42 @@ __posts = __db.posts
 
 #Download the .pdf for the current month from Pub Safe by opening the URL and dumping it into a PDF. Then use Ghost Script (gs) to convert it to a text file
 def downloadAndConvertFile(download_url):
-    response = urllib2.urlopen(download_url)
-    file = open("{fn}.pdf".format(fn = __dateFormat), 'wb')
-    file.write(response.read())
-    file.close()
+	filePath = download_url.replace("http://www.rpi.edu/dept/public_safety/blotter/", "").replace(".pdf", "")
+	response = urllib2.urlopen(download_url)
+	file = open("./pdfs/{fp}.pdf".format(fp = filePath), 'wb')
+	file.write(response.read())
+	file.close()
 
-    os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __dateFormat))
+	os.system('gs -sDEVICE=txtwrite -o ./pdfs/{fp}.txt ./pdfs/{fp}.pdf 1> /dev/null'.format(fp = filePath))
 
-    return 0
+	return 0
+
+def aquireBacklog():
+	#The url of the page you want to scrape
+	baseURL = 'http://www.rpi.edu/dept/public_safety/blotter/'
+
+	#Fetch the page
+	res = urllib2.urlopen(baseURL)
+
+	#Parse the response into an xml tree
+	tree = lxml.html.fromstring(res.read())
+
+	#Construct a namespace dictionary to pass to the xpath() call
+	#This lets us use regular expressions in the xpath
+	ns = {'re': 'http://exslt.org/regular-expressions'}
+
+	#Iterate over all <a> tags whose href ends in ".pdf" (case-insensitive)
+	for node in tree.xpath('//a[re:test(@href, "\.pdf$", "i")]', namespaces=ns):
+		#Save the href, joining it to the baseURL as well as the file name to check and see if it exists
+		scrapedURL = urlparse.urljoin(baseURL, node.attrib['href'])
+		fileName = node.attrib['href']
+		if not os.path.exists('./pdfs/{fp}'.format(fp = fileName)):
+			downloadAndConvertFile(scrapedURL)
+
+	return 0
 
 def createDatabase():
-	file = open("{fn}.txt".format(fn = __dateFormat), 'r')
+	file = open("./pdfs/{fn}.txt".format(fn = __dateFormat), 'r')
 	reportNum = []; dateReported = []; location = []; eventNum = []; dateTimeFromTo = []; incident = [];  disposition = []; coords = []; month = "";
 	seenDisposition = False
 
@@ -113,11 +138,20 @@ def testDB():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
+    	assert aquireBacklog() == 0
     	assert isinstance(filename(), dict)
 
 #How another file can populate the database and dump the JSON
 def runDB():
-    	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
-    	createDatabase()
-    	dumpJSON()
-    	return 0
+	newpath = r'./pdfs'
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
+
+	aquireBacklog()
+	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
+	createDatabase()
+	dumpJSON()
+	return 0
+
+if __name__ == "__main__":
+	runDB()
