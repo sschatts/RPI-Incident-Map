@@ -9,6 +9,7 @@ sudo: required
 install:
   - pip install -r requirements.txt
   - mkdir ./pdfs
+  - sudo apt-get install ghostscript
 #Start the mongodb database that will be connected to
 services: mongodb
 #This is the test script that is run on the code. pytest is used to activate and monitor assert statements in python code
