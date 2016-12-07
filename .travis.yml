@@ -1,14 +1,17 @@
-#set the language that Travis CI will use
+#Set the language that Travis CI will use
 language: python
-#set the language version for Travis CI
+#Set the language version for Travis CI
 python:
   - "2.7"
-#sudo is required to install the dependencies
+#Sudo is required to install the dependencies
 sudo: required
-#calls pip (the python package installer) on requirements.txt. The text file isn't possible to be commented since its plain text however it only contains the packages that pip will install
-install: pip install -r requirements.txt
-#start the mongodb database that will be connected to
+#Calls pip (the python package installer) on requirements.txt. The text file isn't possible to be commented since its plain text however it only contains the packages that pip will install
+install:
+  - pip install -r requirements.txt
+  - mkdir ./pdfs
+#Start the mongodb database that will be connected to
 services: mongodb
-#this is the test script that is run on the code. pytest is used to activate and monitor assert statements in python code
+#This is the test script that is run on the code. pytest is used to activate and monitor assert statements in python code
 script:
   - pytest db_initial.py
+  - pytest incident_generator_class.py

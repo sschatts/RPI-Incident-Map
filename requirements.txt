@@ -2,3 +2,4 @@ pymongo
 mapbox
 pytest
 geocoder
+lxml

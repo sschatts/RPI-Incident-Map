@@ -1,10 +1,13 @@
-import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest
+#Initializes the database by downloading/converting files from Pub Safe and then populating the database with the extracted information. It then dumps the JSON from the database for use by incident_generator_class.py.
+#Written for RPI Incident Map
+
+import urllib2, sys, subprocess, os, datetime, re, geocoder, json, pytest, urlparse, lxml.html
 from pymongo import MongoClient
 from mapbox import Geocoder
 from bson import Binary, Code, json_util
 from bson.json_util import dumps
 
-#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __dateFormat to hold that string
+#Since Pub Safe uses the first three letters of the month (capitalized) followed by an _ and then the last two digits of the year for the .pdf naming convention. I use __dateFormat to hold that string for the current month
 __dateFormat = datetime.datetime.now().strftime("%b").upper() + "_" + str(datetime.datetime.now().year % 100)
 
 #Connect to the proper set of posts in the incident database's collection.
@@ -15,21 +18,46 @@ __posts = __db.posts
 
 #Download the .pdf for the current month from Pub Safe by opening the URL and dumping it into a PDF. Then use Ghost Script (gs) to convert it to a text file
 def downloadAndConvertFile(download_url):
-    response = urllib2.urlopen(download_url)
-    file = open("{fn}.pdf".format(fn = __dateFormat), 'wb')
-    file.write(response.read())
-    file.close()
+	filePath = download_url.replace("http://www.rpi.edu/dept/public_safety/blotter/", "").replace(".pdf", "")
+	response = urllib2.urlopen(download_url)
+	file = open("./pdfs/{fp}.pdf".format(fp = filePath), 'wb')
+	file.write(response.read())
+	file.close()
 
-    os.system('gs -sDEVICE=txtwrite -o ./{fn}.txt ./{fn}.pdf 1> /dev/null'.format(fn = __dateFormat))
+	os.system('gs -sDEVICE=txtwrite -o ./pdfs/{fp}.txt ./pdfs/{fp}.pdf 1> /dev/null'.format(fp = filePath))
 
-    return 0
+	return 0
+
+def aquireBacklog():
+	#The url of the page you want to scrape
+	baseURL = 'http://www.rpi.edu/dept/public_safety/blotter/'
+
+	#Fetch the page
+	res = urllib2.urlopen(baseURL)
+
+	#Parse the response into an xml tree
+	tree = lxml.html.fromstring(res.read())
+
+	#Construct a namespace dictionary to pass to the xpath() call
+	#This lets us use regular expressions in the xpath
+	ns = {'re': 'http://exslt.org/regular-expressions'}
+
+	#Iterate over all <a> tags whose href ends in ".pdf" (case-insensitive)
+	for node in tree.xpath('//a[re:test(@href, "\.pdf$", "i")]', namespaces=ns):
+		#Save the href, joining it to the baseURL as well as the file name to check and see if it exists
+		scrapedURL = urlparse.urljoin(baseURL, node.attrib['href'])
+		fileName = node.attrib['href']
+		if not os.path.exists('./pdfs/{fp}'.format(fp = fileName)):
+			downloadAndConvertFile(scrapedURL)
+
+	return 0
 
 def createDatabase():
-	file = open("{fn}.txt".format(fn = __dateFormat), 'r')
+	file = open("./pdfs/{fn}.txt".format(fn = __dateFormat), 'r')
 	reportNum = []; dateReported = []; location = []; eventNum = []; dateTimeFromTo = []; incident = [];  disposition = []; coords = []; month = "";
 	seenDisposition = False
 
-	for line in file: #for every line in the text file
+	for line in file: #For every line in the text file
 		#Every if statement uses regular expressions to locate the desired field and then records whatever comes after the field up to where the question mark is (or the end of the line if not question mark)
 		#Basically, if what it finds isn't null then write what it (it being re.findall()) finds to a variable
 		if re.findall(r'date reported:.* (?=location)', line):
@@ -69,7 +97,7 @@ def createDatabase():
 			seenDisposition = True
 
 		if seenDisposition:
-			#write the formatted information into a properly formatted post for the MongoDB
+			#Write the formatted information into a properly formatted post for the MongoDB
 			post = {"date reported": dateReported,
 					 "month": month,
 					 "location": location,
@@ -85,33 +113,57 @@ def createDatabase():
 
 	return 0
 
-#dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
+#Dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
 def dumpJSON():
-	f = open("{fn}.json".format(fn = __dateFormat), "w+")
+	f = open("./pdfs/{fn}.json".format(fn = __dateFormat), "w+")
+	#Gets a list of all of the posts that are in the database. Each post is an incident.
     	docsList = list(__posts.find())
+    	#Creates a dump of the posts.
     	jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(',', ': '))
+    	#Writes the dumps to a JSON file
     	f.write(jsonDocs)
     	f.close()
     	return 0
 
-#returns the filename of the JSON created in the function above along with the month and year in number, number tuple
+#Returns the filename of the JSON created in the function above along with the month and year in number, number tuple. Needed for part of Kit's code.
 def filename():
 	year = datetime.datetime.now().year
 	month = datetime.datetime.now().month
 	filename = __dateFormat
-	desireable = {(month, year) : "{fn}.json".format(fn=filename)}
+	desireable = {(month, year) : "./pdfs/{fn}.json".format(fn=filename)}
 	return desireable
 
-#assert statements to test the file's functions
-def testDB():
+#Assert statements to test that all functions run and return the proper result
+def testDownloadAndConvertFile():
+	#assert runDB() == 0
+	newpath = r'./pdfs'
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
-    	assert createDatabase() == 0
-    	assert dumpJSON() == 0
-    	assert isinstance(filename(), dict)
 
-#how another file can populate the database and dump the JSON
+
+    	#assert aquireBacklog() == 0
+
+def testCreateDatabase():
+	assert createDatabase() == 0
+
+def testDumpJSON():
+	assert dumpJSON() == 0
+
+def testFilename():
+	assert isinstance(filename(), dict)
+
+#How another file can populate the database and dump the JSON
 def runDB():
-    	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
-    	createDatabase()
-    	dumpJSON()
-    	return 0
+	newpath = r'./pdfs'
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
+
+	aquireBacklog()
+	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
+	createDatabase()
+	dumpJSON()
+	return 0
+
+# if __name__ == "__main__":
+# 	runDB()
