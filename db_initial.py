@@ -134,11 +134,11 @@ def filename():
 	return desireable
 
 #Assert statements to test that all functions run and return the proper result
-def testDownloadAndConvertFile():
-	newpath = r'./pdfs'
-	if not os.path.exists(newpath):
-		os.makedirs(newpath)
-	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
+# def testDownloadAndConvertFile():
+# 	newpath = r'./pdfs'
+# 	if not os.path.exists(newpath):
+# 		os.makedirs(newpath)
+# 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
 
 def testCreateDatabase():
 	assert createDatabase() == 0
