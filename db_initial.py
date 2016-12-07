@@ -115,7 +115,7 @@ def createDatabase():
 
 #Dumps the posts from the database collection into a json file named with the month and year i.e. NOV_16
 def dumpJSON():
-	f = open("{fn}.json".format(fn = __dateFormat), "w+")
+	f = open("./pdfs/{fn}.json".format(fn = __dateFormat), "w+")
 	#Gets a list of all of the posts that are in the database. Each post is an incident.
     	docsList = list(__posts.find())
     	#Creates a dump of the posts.
@@ -130,12 +130,15 @@ def filename():
 	year = datetime.datetime.now().year
 	month = datetime.datetime.now().month
 	filename = __dateFormat
-	desireable = {(month, year) : "{fn}.json".format(fn=filename)}
+	desireable = {(month, year) : "./pdfs/{fn}.json".format(fn=filename)}
 	return desireable
 
 #Assert statements to test that all functions run and return the proper result
 def testDB():
-	assert runDB() == 0
+	#assert runDB() == 0
+	newpath = r'./pdfs'
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
