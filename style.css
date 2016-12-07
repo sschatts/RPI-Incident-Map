@@ -3,17 +3,20 @@ body {
 	padding:0; 
 	font-family:'Raleway';
 }
+/*map ID will take up the whole screen*/
 #map { 
 	position:absolute; 
 	top:0; 
 	bottom:0; 
 	width:100%; 
 }
-#title_box_words {  
+/*the lines for the Title Box*/
+#titleBoxWords {  
 	border-bottom:3px #2A2A2A solid; 
 	border-top:3px #2A2A2A solid;
 }
-#title_box { 
+/*Set the title box to be 33% of the screen*/
+#titleBox { 
 	position:relative; 
 	top:15; 
 	width:33%; 
@@ -21,48 +24,132 @@ body {
 	margin:25px;
 	padding:5px 0 5px 0;
 }
-#title_box h1 { 
+/*Styling for the website title*/
+#titleBox h1 { 
 	text-align:center; 
 	color:#B90909;
 	margin:15px 0px 8px 0px;
 }
-#title_box h5 {
+/*Styling for the description of website*/
+#titleBox h5 {
 	text-align:center; 
 	color:#2A2A2A;
 	font-style: italic;
 	margin:0px 0px 15px 0px;
 }
-#filter_box_words {
+/*line in the Filter box section*/
+#filterBoxWords {
 	border-top:3px #2A2A2A solid;
 }
-#filter_box {
+/*Styling for the title 'Filters Options'*/
+#filterBoxWords h2 {
+	margin:15px 5px 25px 5px;
+	padding-left: 30px;
+	color:#2A2A2A;
+}
+/*Styling for the Filters div on the bottom of the screen*/
+#filterBox {
 	position:absolute; 
 	width:100%;
 	bottom:0%;
 	background-color:#FFF;
+	margin-top: 10px;
 	padding:5px 0 5px 0;
 }
-#filter_box_words h2 {
-	padding-left: 10px;
-	color:#2A2A2A;
+/*Filter options margin*/
+.filterOptions {
+	margin-top: 20px;
+	margin-bottom: 40px;
+	text-align: center;
 }
-.selection {
-	float:left;
-	margin: 0 50px 20px 10px;
-	background-color:#EDEDED;
-	padding:10px;
-}
-.selection p {
+/*The button for the filter options*/
+.overlaybutton {
 	display: inline;
+	position: relative;
+	text-align: center;
+    padding: 10px 45px 10px 45px;
+    cursor: pointer;
+    margin: 0px 60px 20px 30px;
+	background-color:#EDEDED;
+	border-bottom: 3px rgba(211, 211, 211, 0.5) solid;
+	border-right: 3px rgba(211, 211, 211, 0.5) solid;
 }
-.arrow_down {
-  width: 0; 
-  height: 50%; 
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  display: inline;
-  float:right;
-  border-top: 8px solid #2A2A2A;
-  margin-left: 10px;
-  margin-top: 6px;
+/*change the background on the hover over and on focus*/
+.overlaybutton:hover, .overlaybutton:focus {
+    background-color: #D5D5D5;
+    color: white;
+    border-bottom: 3px rgba(211, 211, 211, 0.9) solid;
+	border-right: 3px rgba(211, 211, 211, 0.9) solid;
+}
+
+.overlay {
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 0;
+    position: fixed; 
+    z-index: 1; 
+    background-color: rgba(0,0,0, 0.9); 
+    overflow-x: hidden; 
+    transition: 0.3s;
+}
+
+/* Position the content inside the overlay */
+.overlayContentType, .overlayContentLocation {
+    position: relative;
+    top: 10%; 
+    width: 100%; 
+    text-align: center;
+    margin-top: 30px;
+}
+
+.overlayContentDate {
+    position: relative;
+    top: 15%; 
+    width: 100%; 
+    text-align: center;
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: block; 
+    transition: 0.1s; 
+    font-size: 23px;
+}
+/* The navigation links inside the date overlay */
+.overlay .overlayContentDate a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block; 
+    transition: 0.3s;
+}
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover, .overlay a:focus {
+    color: #f1f1f1;
+}
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+}
+/*get ride of radio button*/
+
+
+input[type=radio]:not(old){
+  width   : 0px;
+  margin  : 0;
+  padding : 0;
+  opacity : 0;
+}
+ 
+div .leaflet-popup-tip-container {
+	margin-right: 130px;
 }
