@@ -139,7 +139,7 @@ def testDB():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
-    	assert aquireBacklog() == 0
+    	#assert aquireBacklog() == 0
     	assert isinstance(filename(), dict)
 
 #How another file can populate the database and dump the JSON
