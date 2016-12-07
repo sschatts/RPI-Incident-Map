@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
 
         <!--for reading the JSON-->
-        <script data-main="scripts/main" src="scripts/require.js"></script>
+        <!--<script data-main="scripts/main" src="scripts/require.js"></script>-->
     </head>
     <body>
         <div>
@@ -154,17 +154,17 @@
         }
 
         // Code for storing the values of the location selection 
-        var monthSelected;
         var markers = [];
+        var month_markers = [];
         var JsonStuff = [];
-        var locationSelectedBool = false;
-        var monthSelectedLayer = new L.LayerGroup();
+        var monthSelectedBool = false;
+        var layer = new L.LayerGroup();
         function setMonth(choice) {
             //set the month value based on what was clicked
             monthSelected = choice;
             //alert(monthSelected);
-            locationSelectedBool = true;
-            //alert(locationSelectedBool);
+            monthSelectedBool = true;
+            //alert(monthSelectedBool);
 
             //call the python function given the location
             // var req = new XMLHttpRequest();
@@ -197,9 +197,10 @@
 
                     for (var i = 0; i < jsonResponse.length; i++) {
                         //alert(JsonStuff[i].incident);
-                        markers.push([jsonResponse[i].coordinates[0], jsonResponse[i].coordinates[1], jsonResponse[i].incident]);
+                        month_markers.push([jsonResponse[i].coordinates[0], jsonResponse[i].coordinates[1], jsonResponse[i].incident]);
+                        console.log(month_markers[i]);
                     }
-                    createLayers(locationSelectedBool);
+                    createLayers(monthSelectedBool, month_markers);
                 }
             };
             req.open("GET", monthSelected+"_16.json", true);
@@ -238,89 +239,75 @@
         
         
         //var lul = new L.LayerGroup();
-
-        function createLayers(locationSelectedBool){
-            var ECAV = new L.LayerGroup();
-            var EcavMarkers = [];
-            var layerControl;
-            var map;
-            //console.log(JsonStuff.length)
-            // for (var j = 0; j < JsonStuff.length; j++){
-            //     //console.log(JsonStuff[j].location)
-            //     if (JsonStuff[j].location == 'EAST CAMPUS ATHLETIC VILLAGE'){
-            //         //console.log(JsonStuff[j].lon);
-            //         EcavMarkers.push([JsonStuff[j].coordinates[0], JsonStuff[j].coordinates[1], JsonStuff[j].incident])
-            //     }
-            // }
-            // console.log(EcavMarkers[0])
-            var icon_lul = L.AwesomeMarkers.icon({
-                icon: 'none',
-                markerColor: 'pink',
-                prefix: 'glyphicon',
-                extraClasses: 'fa-rotate-0'
-            });
-            var icon_ecav = L.AwesomeMarkers.icon({
-                icon: 'none',
-                markerColor: 'blue',
-                prefix: 'glyphicon',
-                extraClasses: 'fa-rotate-0'
-            });
-
-            //display the markers
-            console.log("Display the markers:");
-            for (var i=0; i< markers.length; i++) {
-                var lat = markers[i][0];
-                //console.log(JsonStuff[i].lon)
-                var lon = markers[i][1];
-                var popupText = markers[i][2];
-                var markerLocation = new L.LatLng(lat, lon);
-                var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(monthSelectedLayer);
-                marker.setIcon(icon_ecav);
-                console.log(markers[i][2]);
-            }
-        
-        
-            // for (var i=0; i<markers.length; i++) {
-            //     var lon = markers[i][0];
-            //     var lat = markers[i][1];
-            //     var popupText = markers[i][2];
-            //     var markerLocation = new L.LatLng(lat, lon);
-            //     var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(lul);
-            //     //marker.bindPopup(popupText);
-            //     marker.setIcon(icon_lul);
-            // }
-
-
-            var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
-
-            var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
-
-            if(locationSelectedBool == true){
-                //alert("IN IF");
-                map.remove();
-                map = L.map('map', {
-                    center: [42.730105,-73.6771229],
-                    zoom: 15,
-                    layers: [ECAV]
+        var map;
+        var layerControl;
+        function createLayers(monthSelectedBool, markers){
+            if(monthSelectedBool == false){
+                //var ECAV = new L.LayerGroup();
+                //var EcavMarkers = [];
+                
+                //console.log(JsonStuff.length)
+                // for (var j = 0; j < JsonStuff.length; j++){
+                //     //console.log(JsonStuff[j].location)
+                //     if (JsonStuff[j].location == 'EAST CAMPUS ATHLETIC VILLAGE'){
+                //         //console.log(JsonStuff[j].lon);
+                //         EcavMarkers.push([JsonStuff[j].coordinates[0], JsonStuff[j].coordinates[1], JsonStuff[j].incident])
+                //     }
+                // }
+                // console.log(EcavMarkers[0])
+                // var icon_lul = L.AwesomeMarkers.icon({
+                //     icon: 'none',
+                //     markerColor: 'pink',
+                //     prefix: 'glyphicon',
+                //     extraClasses: 'fa-rotate-0'
+                // });
+                
+                //icon type
+                var icon_type = L.AwesomeMarkers.icon({
+                    icon: 'none',
+                    markerColor: 'blue',
+                    prefix: 'glyphicon',
+                    extraClasses: 'fa-rotate-0'
                 });
 
-                map.options.maxZoom = 17;
-                map.options.minZoom = 15;
+                //display the markers
+                console.log("Display the markers:" + markers.length);
+                for (var i=0; i< markers.length; i++) {
+                    var lat = markers[i].coordinates[0];
+                    //console.log("lon ??" + markers[i].coordinates[1])
+                    var lon = markers[i].coordinates[1];
+                    //console.log("popup text: " + markers[i].incident)
+                    var popupText = markers[i].incident;
+                    //console.log("marker: " + markers[i])
+                    //console.log("Lat: " + lat);
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(layer);
+                    marker.setIcon(icon_type);
+                }
+            
+            
+                // for (var i=0; i<markers.length; i++) {
+                //     var lon = markers[i][0];
+                //     var lat = markers[i][1];
+                //     var popupText = markers[i][2];
+                //     var markerLocation = new L.LatLng(lat, lon);
+                //     var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(lul);
+                //     //marker.bindPopup(popupText);
+                //     marker.setIcon(icon_lul);
+                // }
 
-                //map.addControl(L.control.fractionalZoom({position: 'topright', zoomIncrement:.1}));
-                var baseLayers = {
-                    "Select Location Areas:": streets
-                };
-                layerControl.addOverlay( monthSelectedLayer, "Month Selected");
-            }
-            else{
+
+                var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                    mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+
+                var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+
                 map = L.map('map', {
                     center: [42.730105,-73.6771229],
                     zoom: 15,
-                    layers: [ECAV]
+                    layers: [layer]
                 });
                 map.options.maxZoom = 17;
                 map.options.minZoom = 15;
@@ -332,16 +319,94 @@
                 };
 
                 var overlays = {
-                    "ECAV": ECAV
+                    "LAYER": layer
                 }
                 layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+            }
+
+            if(monthSelectedBool == true){
+                //console.log(map.hasLayer(layer));
+                map.removeLayer(layer);
+                var month = new L.LayerGroup();
+
+                //icon type
+                var icon_type = L.AwesomeMarkers.icon({
+                    icon: 'none',
+                    markerColor: 'pink',
+                    prefix: 'glyphicon',
+                    extraClasses: 'fa-rotate-0'
+                });
+
+                //display the markers
+                console.log("Display the markers:" + month_markers.length);
+                for (var i=0; i< month_markers.length; i++) {
+                    console.log("coordinates: " + month_markers[i][0] + " , " + month_markers[i][1])
+                    var lat = month_markers[i][0];
+                    //console.log("lon ??" + markers[i].coordinates[1])
+                    var lon = month_markers[i][1];
+                    //console.log("popup text: " + markers[i].incident)
+                    var popupText = month_markers[i][2];
+                    //console.log("marker: " + markers[i])
+                    //console.log("Lat: " + lat);
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(month);
+                    marker.setIcon(icon_type);
+                }
+
+                //console.log("IN IF");
+
+                // var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                //         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                //         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                //     mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+
+                //var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+                //console.log("before titleLayer");
+                //L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
+                //map.addControl(L.control.fractionalZoom({position: 'topright', zoomIncrement:.1}));
+                // var baseLayers = {
+                //     "Select Location Areas:": streets
+                // };
+                //console.log("before map =");
+                // map = L.map('map', {
+                //     center: [42.730105,-73.6771229],
+                //     zoom: 15,
+                //     layers: [month]
+                // });
+
+                // map.options.maxZoom = 17;
+                // map.options.minZoom = 15;
+
+                // var overlays = {
+                //     "LAYER": layer,
+                //     "Month Selected Layer": month
+                // }
+                // layerControl = L.control.layers(baseLayers, overlays).addTo(map);               
+
+                //map.addControl(L.control.fractionalZoom({position: 'topright', zoomIncrement:.1}));
+                //layerControl.addOverlay( month, "MONTH");
+                map.addLayer(month);
             }
                
 
             
         } 
-
-        createLayers(false);  
+        //code merged from Levin
+        var initial_incidents = [];
+        $.ajax({
+            async: false,
+            url: 'initial.json',
+            data: "",
+            accepts:'application/json',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    initial_incidents.push( data[i]);
+                    console.log(initial_incidents[i]);
+                }
+            }
+        });
+        createLayers(false, initial_incidents);  
 
         </script>
 
