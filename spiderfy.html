@@ -31,8 +31,6 @@
 			position:absolute; top:0; bottom:0; width:100%;
 		}
 	</style>
-
-	
 </head>
 <body>
 
@@ -55,19 +53,16 @@
 	});
 	
 	//initialize layergroups and arrays
-	var RPI = new L.LayerGroup();
-	var north = new L.LayerGroup();
-	var south = new L.LayerGroup();
-	var east = new L.LayerGroup();
-	var west = new L.LayerGroup();
 	var rpiMarkers = [];
 	var northMarkers = [];
 	var southMarkers = [];
 	var eastMarkers = [];
 	var westMarkers = [];
+	var allMarkers = [];
 	
 	//popuplate jsonObjects
 	for (var j = 0; j < jsonObjects.length; j++){
+		allMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
 		if (jsonObjects[j]['location group'] == 'RPI'){
 			rpiMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
 		}
@@ -129,7 +124,6 @@
 	var map = L.map('map', {
 		center: [42.730105,-73.6771229],
 		zoom: 15,
-		layers: [RPI, north, south, east, west]
 	});
 	
 	
@@ -143,60 +137,22 @@
 		map.openPopup(popup);
 	});
 	oms.addListener('spiderfy', function(markers) {
-		for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(new lightIcon());
+		//for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(new lightIcon());
 		map.closePopup();
 	});
-	oms.addListener('unspiderfy', function(markers) {
-		for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(iconDark());
-	});
-	
 	//for loops for adding markers to the map
-	for (var i=0; i<rpiMarkers.length; i++) {
-		var lat = rpiMarkers[i][0];
-		var lon = rpiMarkers[i][1];
-		var popupText = rpiMarkers[i][2];
+	for (var i=0; i<allMarkers.length; i++) {
+		var lat = allMarkers[i][0];
+		var lon = allMarkers[i][1];
+		var popupText = allMarkers[i][2];
 		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText);
+		var marker = new L.Marker(markerLocation);
+		marker.desc = popupText;
 		marker.setIcon(iconRPI);
-		marker.addTo(RPI)
+		map.addLayer(marker)
 		oms.addMarker(marker);
 	}
-	for (var i=0; i<northMarkers.length; i++) {
-		var lat = northMarkers[i][0];
-		var lon = northMarkers[i][1];
-		var popupText = northMarkers[i][2];
-		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(north);
-		marker.setIcon(iconNorth);
-		oms.addMarker(marker);
-	}
-	for (var i=0; i<southMarkers.length; i++) {
-		var lat = southMarkers[i][0];
-		var lon = southMarkers[i][1];
-		var popupText = southMarkers[i][2];
-		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(south);
-		marker.setIcon(iconSouth);
-		oms.addMarker(marker);
-	}
-	for (var i=0; i<eastMarkers.length; i++) {
-		var lat = eastMarkers[i][0];
-		var lon = eastMarkers[i][1];
-		var popupText = eastMarkers[i][2];
-		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(east);
-		marker.setIcon(iconEast);
-		oms.addMarker(marker);
-	}
-	for (var i=0; i<westMarkers.length; i++) {
-		var lat = westMarkers[i][0];
-		var lon = westMarkers[i][1];
-		var popupText = westMarkers[i][2];
-		var markerLocation = new L.LatLng(lat, lon);
-		var marker = new L.Marker(markerLocation).bindPopup(popupText).addTo(west);
-		marker.setIcon(iconWest);
-		oms.addMarker(marker);
-	}
+	
 
 	//map initialization vars
 	var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -208,22 +164,7 @@
 	map.options.maxZoom = 17;
 	map.options.minZoom = 15;
 	//populates map with base image
-	L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
-	
-	//adds base image
-	var baseLayers = {
-		"Select Location Areas:": streets
-	};
-	//adds layers
-	var overlays = {
-		"RPI": RPI,
-		"North": north,
-		"South": south,
-		"East": east,
-		"West": west
-	};
-	//creates control for layers
-	L.control.layers(baseLayers, overlays).addTo(map);
+	L.tileLayer(mbUrl, {id: 'mapbox.streets', attribution: mbAttr}).addTo(map);
 </script>
 
 
