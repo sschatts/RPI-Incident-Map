@@ -57,6 +57,7 @@ def createBacklogMonth(aDate):
 	if not os.path.exists("./pdfs/{fp}.json".format(fp = aDate)):
 		createDatabase(aDate)
 		dumpJSON(aDate)
+	return 0
 
 #Allows the creation of an entire year's worth of JSONs for Kit's code. Take in an integer in the format XXXX. Example: 2016
 def createBacklogYear(aYear):
@@ -65,6 +66,7 @@ def createBacklogYear(aYear):
 		if not os.path.exists("./pdfs/{fp}.json".format(fp = date)):
 			createDatabase(date)
 			dumpJSON(date)
+	return 0
 
 def createDatabase(fileName):
 	file = open("./pdfs/{fn}.txt".format(fn = fileName), "r")
@@ -155,19 +157,25 @@ def testDownloadAndConvertFile():
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
 
 def testCreateDatabase():
-	assert createDatabase() == 0
+	assert createDatabase("DEC_16") == 0
 
 def testDumpJSON():
-	assert dumpJSON() == 0
+	assert dumpJSON("DEC_16") == 0
 
 def testFilename():
-	assert isinstance(filename(), dict)
+	assert isinstance(filename(), str)
 
 def testAquireBacklog():
 	newpath = r"./pdfs"
 	if not os.path.exists(newpath):
 		os.makedirs(newpath)
 	assert aquireBacklog() == 0
+
+def testCreateBacklogYear():
+	assert createBacklogYear(2016) == 0
+
+def testCreateBacklogMonth():
+	assert createBacklogMonth("DEC_16") == 0
 
 #How another file can populate the database and dump the JSON
 def runDB():
