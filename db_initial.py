@@ -135,14 +135,10 @@ def filename():
 
 #Assert statements to test that all functions run and return the proper result
 def testDownloadAndConvertFile():
-	#assert runDB() == 0
 	newpath = r'./pdfs'
 	if not os.path.exists(newpath):
 		os.makedirs(newpath)
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
-
-
-    	#assert aquireBacklog() == 0
 
 def testCreateDatabase():
 	assert createDatabase() == 0
@@ -152,6 +148,12 @@ def testDumpJSON():
 
 def testFilename():
 	assert isinstance(filename(), dict)
+
+def testAquireBacklog():
+	newpath = r'./pdfs'
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
+	assert aquireBacklog() == 0
 
 #How another file can populate the database and dump the JSON
 def runDB():
@@ -165,5 +167,5 @@ def runDB():
 	dumpJSON()
 	return 0
 
-# if __name__ == "__main__":
-# 	runDB()
+if __name__ == "__main__":
+	runDB()
