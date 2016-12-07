@@ -52,7 +52,14 @@ def aquireBacklog():
 
 	return 0
 
-def createBacklog(aYear):
+#Allows the creation of one month's JSON file for Kit's code. It takes in a string of the format "XXX_YY" with no extension. It must also be a string. Example: DEC_16
+def createBacklogMonth(aDate):
+	if not os.path.exists("./pdfs/{fp}.json".format(fp = aDate)):
+		createDatabase(aDate)
+		dumpJSON(aDate)
+
+#Allows the creation of an entire year's worth of JSONs for Kit's code. Take in an integer in the format XXXX. Example: 2016
+def createBacklogYear(aYear):
 	for i in range(1,13):
 		date = datetime.date(aYear, i, 1).strftime("%b").upper() + "_" + str(aYear % 100)
 		if not os.path.exists("./pdfs/{fp}.json".format(fp = date)):
@@ -169,7 +176,7 @@ def runDB():
 		os.makedirs(newpath)
 
 	aquireBacklog()
-	createBacklog(2016)
+	createBacklogYear(2016)
 	downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat))
 	createDatabase(__dateFormat)
 	dumpJSON(__dateFormat)
