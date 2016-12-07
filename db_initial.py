@@ -167,5 +167,5 @@ def runDB():
 	dumpJSON()
 	return 0
 
-if __name__ == "__main__":
-	runDB()
+# if __name__ == "__main__":
+# 	runDB()
