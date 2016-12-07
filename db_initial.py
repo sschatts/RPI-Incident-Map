@@ -135,6 +135,7 @@ def filename():
 
 #Assert statements to test that all functions run and return the proper result
 def testDB():
+	assert runDB() == 0
 	assert downloadAndConvertFile("http://www.rpi.edu/dept/public_safety/blotter/{fn}.pdf".format(fn = __dateFormat)) == 0
     	assert createDatabase() == 0
     	assert dumpJSON() == 0
@@ -153,5 +154,5 @@ def runDB():
 	dumpJSON()
 	return 0
 
-if __name__ == "__main__":
-	runDB()
+# if __name__ == "__main__":
+# 	runDB()
