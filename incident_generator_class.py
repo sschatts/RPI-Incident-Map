@@ -213,7 +213,7 @@ class IncidentToJson():
 
         incidDicList = []
 
-        with open(fname, "w") as jsonFile:
+        with open("./pdfs/{fn}".format(fn = fname), "w") as jsonFile:
             for incid in incidents:
                 #create dictionary out of incident object as intermediate step in making JSON object
                 incid_dic = {"event #": incid.eventNum, "incidentType": incid.incidentType, "location": incid.location.locationName, "location group": incid.location.locationGroup, "latitude": incid.location.lat, "longitude": incid.location.long, "date reported": incid.dateReported.isoformat(), "dateOccurred": incid.dateOccurred.isoformat()}
