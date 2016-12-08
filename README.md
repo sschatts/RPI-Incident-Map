@@ -26,7 +26,7 @@ Use Travis CI for our testing. Repo gets tested on every build.
 ## Coding Standards
 1. We are using tabs instead of spaces to ensure we are staying consistent across the different files in the repository.
 2. In out text editors we have declared tabs are equivalent to four spaces because different text editors vary the number of spaces that are equivalent to one tab.
-3. We use uppercamelcase for all classes and variables to improve readability and maintain consistency in all files.
+3. We use uppercamelcase for all classes and lower camel case for variables and functions to improve readability and maintain consistency in all files.
 4. All private variables begin with __, which is a coding standard for Python.
 5. All code is commented with functionality explanation so that returning to old code is easy and new developers understand the purpose of each of the functions.
 6. We use double quotes for strings.
