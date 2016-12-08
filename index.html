@@ -5,122 +5,546 @@
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> <!--Raleway Font link-->
         <link rel="stylesheet" href="style.css">
+
+        <!--Links from Levin's code -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+
+        <script type="text/javascript" src="oms.min.js"></script>
     </head>
     <body>
         <div>
+            <!--The ID 'map' is used below to load the map-->
             <div id='map'></div>
-            <div id='title_box'>
-                <div id='title_box_words'>
+            <!-- Information that is in the Title box in the top left corner -->
+            <div id='titleBox'>
+                <div id='titleBoxWords'>
                     <h1>RPI Incident Map</h1>
                     <h5>Visualization of the Incidents Reported to Public Safety</h5>
-                </div>   <!-- title_box_words -->   
-            </div> <!-- title_box -->
-            <div id='filter_box'>
-                <div id='filter_box_words'>
-                    <h2>Filters</h2>
-                    <div class="white_back">
-                        <p onclick="openNav()" class="dropbtn">Locations</p>
-                        <p onclick="openNav2()" class="dropbtn">Date Range</p>
+                </div>   <!-- close div titleBoxWords -->   
+            </div> <!-- close div titleBox -->
+            <!-- Information that is in the filter box across the bottom of the screen -->
+            <div id='filterBox'>
+                <div id='filterBoxWords'>
+                    <h2>Filter Options:</h2>
+                    <!--Specific filter option -->
+                    <!-- the openNav function open the options for each filter type-->
+                    <div class='filterOptions'>
+                        <p onclick="openNavLocation()" class="overlaybutton">Select Location</p>
+                        <p onclick="openNavType()" class="overlaybutton">Select Type of Incident</p>
+                        <p onclick="openNavDate()" class="overlaybutton">Select Month</p>
                     </div>
-                    <div id="myNav" class="overlay">
-                        <!-- Button to close the overlay navigation -->
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <!-- Information for the Location options overlay -->
+                    <div id="myNavLocation" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavLocation()">&times;</a>
 
-                        <!-- Overlay content -->
-                        <div class="overlay-content">
-                            <a href="#">Amos Eaten</a>
-                            <a href="#">Barton</a>
-                            <a href="#">BAR-H</a>
-                            <a href="#">City Station</a>
-                            <a href="#">Lally</a>
-                            <a href="#">Student Union</a>
-                        </div>
-                    </div>
+                        <!-- Location Overlay content -->
+                        <div class="overlayContentLocation">
+                            <a onclick="setLocation('North')">North Campus</a>
+                            <a onclick="setLocation('West')">West Campus</a>
+                            <a onclick="setLocation('South')">South Campus</a>
+                            <a onclick="setLocation('East')">East Campus</a>
+                            <a onclick="setLocation('Academic')">Academic Campus</a>
+                            <a onclick="setLocation('Off')">Off Campus</a>
+                        </div> <!-- close div overlayContentLocation-->
+                    </div> <!-- close myNavLocation div -->
+                    <!-- Information for the Month Selection options overlay -->
+                    <div id="myNavDate" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavDate()">&times;</a>
 
-                    <div id="myNav2" class="overlay">
-                        <!-- Button to close the overlay navigation -->
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav2()">&times;</a>
+                        <!-- Month Overlay content -->
+                        <div class="overlayContentDate">
+                            <a onclick="setMonth('1')">January 2016</a>
+                            <a onclick="setMonth('2')">February 2016</a>
+                            <a onclick="setMonth('3')">March 2016</a>
+                            <a onclick="setMonth('4')">April 2016</a>
+                            <a onclick="setMonth('5')">May 2016</a>
+                            <a onclick="setMonth('6')">June 2016</a>
+                            <a onclick="setMonth('7')">July 2016</a>
+                            <a onclick="setMonth('8')">August 2016</a>
+                            <a onclick="setMonth('9')">September 2016</a>
+                            <a onclick="setMonth('10')">October 2016</a>
+                            <a onclick="setMonth('11')">November 2016</a>
+                            <a onclick="setMonth('12')">December 2016</a>
+                        </div> <!-- close overlayContentDate div -->
+                    </div> <!--close myNavDate div -->
+                    <!-- Information for the Type Selection options overlay -->
+                    <div id="myNavType" class="overlay">
+                        <!-- X is used to close the overlay informational box -->
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNavType()">&times;</a>
 
-                        <!-- Overlay content -->
-                        <div class="overlay-content2">
-                            <a href="#">Date</a>
-                            <a href="#">Month</a>
-                            <a href="#">Year</a>
-                        </div>
-                    </div>
-                    
+                        <!-- Type of Incident Overlay content -->
+                        <div class="overlayContentType">
+                            <a onclick="setTypeIncident('Mischief')">Mischief</a>
+                            <a onclick="setTypeIncident('Fire Alarm')">Fire Alarm</a>
+                            <a onclick="setTypeIncident('Medical Incident')">Medical Incident</a>
+                            <a onclick="setTypeIncident('Intoxication')">Intoxication</a>
+                            <a onclick="setTypeIncident('Property Damage')">Property Damage</a>
+                            <a onclick="setTypeIncident('Larceny and Assult')">Larceny and Assault</a>
+                        </div> <!-- close overlayContentType div -->
+                    </div> <!-- close myNavType div -->
 
-                </div> <!-- filter_box_words -->
-            </div> <!-- filter_box -->
+                </div> <!-- filterBoxWords -->
+            </div> <!-- filterBox -->
         </div>
         <script>
+        //opens the overlay for the location options
+        function openNavLocation() {
+            document.getElementById("myNavLocation").style.width = "100%";
+        }
 
+        //closes the overlay for the location options
+        function closeNavLocation() {
+            document.getElementById("myNavLocation").style.width = "0%";
+        }
 
-        mapboxgl.accessToken = 'pk.eyJ1Ijoic3NjaGF0dHMiLCJhIjoiY2l1NDdib3N1MGl2MTJwbGhycnNqNGYxciJ9.uCMQ9n7xQCjRvRMnmFrLrw';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v9',
-            center: [-73.676,42.727],
-            zoom: 13.8,
-            maxZoom: 17.5,
-            minZoom: 13.7
+        //opens the overlay for the type of incident options
+        function openNavType() {
+            document.getElementById("myNavType").style.width = "100%";
+        }
+
+        //closes the overlay for the type of incident options
+        function closeNavType() {
+            document.getElementById("myNavType").style.width = "0%";
+        }
+
+        //open the overlay for the date options
+        function openNavDate() {
+            document.getElementById("myNavDate").style.width = "100%";
+        }
+
+        //closes the overlay for the date options
+        function closeNavDate() {
+            document.getElementById("myNavDate").style.width = "0%";
+        }
+
+        // Code for storing the values of the location selection
+        var locationSelected;
+        var locationMarkers = [];
+        var locationSelectedBool = false;
+        function setLocation(choice) {
+            console.log("in setLocation");
+            //set the location value based on what was clicked
+            locationSelected = choice;
+            locationSelectedBool = true;
+
+            //make an HTTP request to access the corresponding JSON file
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    //populate the locationMarkers with the information
+                    var jsonResponse = JSON.parse(req.responseText);
+                    for (var i = 0; i < jsonResponse.length; i++) {
+                        locationMarkers.push([jsonResponse[i].latitude, jsonResponse[i].longitude, jsonResponse[i].incidentType]);
+                    }
+                    //call create layers to update the map
+                    createLayers(locationSelectedBool, false, false, locationMarkers);
+                    locationMarkers = [];
+                }
+            };
+            //Open the standard name for the specific location JSON
+            req.open("GET", "pdfs/incidents_12_2016_"+locationSelected+".json", true);
+            req.send();
+            //close the overlay options
+            closeNavLocation();
+
+        }
+
+        // Code for storing the values of the location selection 
+        var monthMarkers = [];
+        var monthSelectedBool = false;
+        var layer = new L.LayerGroup();
+        function setMonth(choice) {
+            console.log("in setMonth");
+            //set the month value based on what was clicked
+            monthSelected = choice;
+            monthSelectedBool = true;
+
+            //make an HTTP request to access the corresponding JSON file
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    //populate the monthMarkers with the information
+                    var jsonResponse = JSON.parse(req.responseText);
+                    for (var i = 0; i < jsonResponse.length; i++) {
+                        //console.log("Lat: "+jsonResponse[i].latitude+ " long: "+ jsonResponse[i].longitude)
+                        monthMarkers.push([jsonResponse[i].latitude, jsonResponse[i].longitude, jsonResponse[i].incidentType]);
+                    }
+                    //call create layers to update the map
+                    createLayers(monthSelectedBool, false, false, monthMarkers);
+                    monthMarkers = [];
+                }
+            };
+            req.open("GET", "pdfs/incidents_"+monthSelected+"_2016.json", true);
+            req.send();
+            closeNavDate();
+        }
+
+        // Code for storing the values of the type selection 
+        var typeSelected;
+        var typeSelectedBool = false;
+        var typeMarkers = [];
+        function setTypeIncident(choice) {
+            console.log("in setTypeIncident");
+            //set the type of incident value based on what was clicked
+            typeSelected = choice;
+            typeSelectedBool = true;
+
+            //make an HTTP request to access the corresponding JSON file
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    //populate the typeMarkers with the information
+                    var jsonResponse = JSON.parse(req.responseText);
+                    for (var i = 0; i < jsonResponse.length; i++) {
+                        console.log(jsonResponse[i]);
+                        typeMarkers.push([jsonResponse[i].latitude, jsonResponse[i].longitude, jsonResponse[i].incidentType]);
+                    }
+                    //call create layers to update the map
+                    console.log("before the send: "+ typeMarkers.length);
+                    createLayers(false, typeSelectedBool, false, typeMarkers);
+                    typeMarkers = [];
+                }
+            };
+            //Open the standard name for the specific location JSON
+            req.open("GET", "pdfs/incidents_12_2016_"+typeSelected+".json", true);
+            req.send();
+            //close the overlay options
+            closeNavType();
+        }
+
+        //variables for the map
+        var map = L.map('map', {
+            center: [42.730105,-73.6771229],
+            zoom: 15,
+            layers: [layer]
+        });
+        //zoom options for the map
+        map.options.maxZoom = 17;
+        map.options.minZoom = 15;
+        //layers variables
+        var typeSelectedLayer;
+        var locationSelectedLayer;
+        var month;
+
+        //OMS functionality for spiderfying markers.
+        var oms = new OverlappingMarkerSpiderfier(map);
+        var popup = new L.Popup({closeButton: false, offset: new L.Point(0.5, -24)});
+        oms.addListener('click', function(marker) {
+            popup.setContent(marker.desc);
+            popup.setLatLng(marker.getLatLng());
+            console.log(marker.desc)
+            map.openPopup(popup);
+        });
+        oms.addListener('spiderfy', function(markers) {
+            //for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(new lightIcon());
+            map.closePopup();
         });
 
-        map.on('load', function () {
-            map.addSource("points", {
-                "type": "geojson",
-                "data": {
-                    "type": "FeatureCollection",
-                    "features": [{
-                        "type": "Feature",
-						"properties": {
-							"description": "xDXdxDxDxD",
-							"icon": "theatre"
-						},
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [-73.677,42.730]
-                        },
-                        "properties": {
-                            "icon": "monument"
-                        }
-                    }]
-                }
+        function createLayers(monthSelectedBool, typeSelectedBool, locationSelectedBool, markers){
+            console.log("after the send: "+ typeMarkers.length);
+            //console.log("before the send: "+ markers.length);
+            //type of icons
+            var icon_mischief = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'pink',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_fire = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'red',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_med = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'blue',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_intoxication = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'black',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_property = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'green',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_assult = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'orange',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
+            });
+            var icon_other = L.AwesomeMarkers.icon({
+                icon: 'none',
+                markerColor: 'purple',
+                prefix: 'glyphicon',
+                extraClasses: 'fa-rotate-0'
             });
 
-            map.addLayer({
-                "id": "points",
-                "type": "symbol",
-                "source": "points",
-                "layout": {
-                    "icon-image": "{icon}-15",
-                    "text-field": "{title}",
-                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                    "text-offset": [0, 0.6],
-                    "text-anchor": "top"
+            console.log(map.hasLayer(layer));
+            if(monthSelectedBool == true){
+                console.log("in month selected bool");
+                console.log(map.hasLayer(layer));
+                if(map.hasLayer(layer) == true){
+                    console.log("in layer");
+                    map.removeLayer(layer);
+                    console.log("after: " +map.hasLayer(layer));
                 }
-            });
+                if(map.hasLayer(typeSelectedLayer) == true){
+                    map.removeLayer(typeSelectedLayer);
+                }
+                if(map.hasLayer(locationSelectedLayer) == true){
+                    map.removeLayer(locationSelectedLayer);
+                }
+                if(map.hasLayer(month) == true){
+                    map.removeLayer(month);
+                }
+                month = new L.LayerGroup();
+
+                //display the markers
+                //console.log("Display the markers:" + monthMarkers.length);
+                for (var i=0; i< markers.length; i++) {
+                    var lat = markers[i][0];
+                    var lon = markers[i][1];
+                    var popupText = markers[i][2];
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).addTo(month);
+                    marker.desc = popupText;
+                    if(markers[i][2] == "Mischief"){
+                        marker.setIcon(icon_mischief);
+                    }
+                    else if(markers[i][2] == "Fire Alarm"){
+                        marker.setIcon(icon_fire);
+                    }
+                    else if(markers[i][2] == "Medical Incident"){
+                        marker.setIcon(icon_med);
+                    }
+                    else if(markers[i][2] == "Intoxication"){
+                        marker.setIcon(icon_intoxication);
+                    }
+                    else if(markers[i][2] == "Property Damage"){
+                        marker.setIcon(icon_property);
+                    }
+                    else if(markers[i][2] == "Assult"){
+                        marker.setIcon(icon_assult);
+                    }
+                    else{
+                        marker.setIcon(icon_other);
+                    }
+                    oms.addMarker(marker);
+                }
+                //Add the month select pins to the map
+                console.log("after before add: " +map.hasLayer(layer));
+                map.addLayer(month);
+            }
+
+            else if(typeSelectedBool == true){
+                console.log("in type selected bool "+ markers.length);
+                if(map.hasLayer(layer)){
+                    map.removeLayer(layer);
+                }
+                if(map.hasLayer(typeSelectedLayer)){
+                    map.removeLayer(typeSelectedLayer);
+                }
+                if(map.hasLayer(locationSelectedLayer)){
+                    map.removeLayer(locationSelectedLayer);
+                }
+                if(map.hasLayer(month)){
+                    map.removeLayer(month);
+                }
+                typeSelectedLayer = new L.LayerGroup();
+                console.log("in type selected bool "+ markers.length);
+                //display the markers
+                //console.log("Display the markers:" + monthMarkers.length);
+                console.log(markers[0]);
+                for (var i=0; i< markers.length; i++) {
+                    var lat = markers[i][0];
+                    var lon = markers[i][1];
+                    var popupText = markers[i][2];
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).addTo(typeSelectedLayer);
+                    marker.desc = popupText;
+                    if(markers[i][2] == "Mischief"){
+                        marker.setIcon(icon_mischief);
+                    }
+                    else if(markers[i][2] == "Fire Alarm"){
+                        marker.setIcon(icon_fire);
+                    }
+                    else if(markers[i][2] == "Medical Incident"){
+                        marker.setIcon(icon_med);
+                    }
+                    else if(markers[i][2] == "Intoxication"){
+                        marker.setIcon(icon_intoxication);
+                    }
+                    else if(markers[i][2] == "Property Damage"){
+                        marker.setIcon(icon_property);
+                    }
+                    else if(markers[i][2] == "Assult"){
+                        marker.setIcon(icon_assult);
+                    }
+                    else{
+                        marker.setIcon(icon_other);
+                    }
+                    oms.addMarker(marker);
+                }
+                //Add the type select pins to the map
+                map.addLayer(typeSelectedLayer);
+            }
+
+            else if(locationSelectedBool == true){
+                console.log("in location bool");
+                if(map.hasLayer(layer)){
+                    map.removeLayer(layer);
+                }
+                if(map.hasLayer(typeSelectedLayer)){
+                    map.removeLayer(typeSelectedLayer);
+                }
+                if(map.hasLayer(locationSelectedLayer)){
+                    map.removeLayer(locationSelectedLayer);
+                }
+                if(map.hasLayer(month)){
+                    map.removeLayer(month);
+                }
+                locationSelectedLayer = new L.LayerGroup();
+
+                //display the markers
+                //console.log("Display the markers:" + monthMarkers.length);
+                for (var i=0; i< markers.length; i++) {
+                    var lat = markers[i][0];
+                    var lon = markers[i][1];
+                    var popupText = monthMarkers[i][2];
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).addTo(locationSelectedLayer);
+                    marker.desc = popupText;
+                    if(markers[i][2] == "Mischief"){
+                        marker.setIcon(icon_mischief);
+                    }
+                    else if(markers[i][2] == "Fire Alarm"){
+                        marker.setIcon(icon_fire);
+                    }
+                    else if(markers[i][2] == "Medical Incident"){
+                        marker.setIcon(icon_med);
+                    }
+                    else if(markers[i][2] == "Intoxication"){
+                        marker.setIcon(icon_intoxication);
+                    }
+                    else if(markers[i][2] == "Property Damage"){
+                        marker.setIcon(icon_property);
+                    }
+                    else if(markers[i][2] == "Assult"){
+                        marker.setIcon(icon_assult);
+                    }
+                    else{
+                        marker.setIcon(icon_other);
+                    }
+                    oms.addMarker(marker);
+                }
+                //Add the type select pins to the map
+                map.addLayer(locationSelectedLayer);
+            }
+
+            else{
+                console.log("in ELSE");
+                //icon type
+                var icon_type = L.AwesomeMarkers.icon({
+                    icon: 'none',
+                    markerColor: 'blue',
+                    prefix: 'glyphicon',
+                    extraClasses: 'fa-rotate-0'
+                });
+
+                //display the initial_incidents
+                for (var i=0; i< markers.length; i++) {
+                    var lat = markers[i].latitude;
+                    var lon = markers[i].longitude;
+                    var popupText = markers[i].incidentType;
+                    var markerLocation = new L.LatLng(lat, lon);
+                    var marker = new L.Marker(markerLocation).addTo(layer);
+                    marker.desc = popupText;
+                    if(markers[i].incidentType == "Mischief"){
+                        marker.setIcon(icon_mischief);
+                    }
+                    else if(markers[i].incidentType == "Fire Alarm"){
+                        marker.setIcon(icon_fire);
+                    }
+                    else if(markers[i].incidentType == "Medical Incident"){
+                        marker.setIcon(icon_med);
+                    }
+                    else if(markers[i].incidentType == "Intoxication"){
+                        marker.setIcon(icon_intoxication);
+                    }
+                    else if(markers[i].incidentType == "Property Damage"){
+                        marker.setIcon(icon_property);
+                    }
+                    else if(markers[i].incidentType == "Assult"){
+                        marker.setIcon(icon_assult);
+                    }
+                    else{
+                        marker.setIcon(icon_other);
+                    }
+                    oms.addMarker(marker);
+                }
+
+                var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                    mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+
+                var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+
+                L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}).addTo(map);
+                var baseLayers = {
+                    "Select Location Areas:": streets
+                };
+
+                map.addLayer(layer);
+
+            }
+
+
+        } 
+        //code to generate the initial incidents
+        var initial_incidents = [];
+        $.ajax({
+            async: false,
+            url: 'pdfs/incidents_12_2016.json',
+            data: "",
+            accepts:'application/json',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    initial_incidents.push( data[i]);
+                    //console.log(initial_incidents[i]);
+                }
+            }
         });
-
-        function openNav() {
-            document.getElementById("myNav").style.width = "100%";
-        }
-
-        /* Close when someone clicks on the "x" symbol inside the overlay */
-        function closeNav() {
-            document.getElementById("myNav").style.width = "0%";
-        }
-
-        function openNav2() {
-            document.getElementById("myNav2").style.width = "100%";
-        }
-
-        /* Close when someone clicks on the "x" symbol inside the overlay */
-        function closeNav2() {
-            document.getElementById("myNav2").style.width = "0%";
-        }
-
+        //Call create layers to display the pins
+        createLayers(false, false, false, initial_incidents);  
         </script>
-
     </body>
 </html>
