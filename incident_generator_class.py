@@ -220,7 +220,7 @@ class Incident:
         self.incidentType = _incidentType #string
         self.location = _location #location description
 
-        ##just use python built-in date objects for these::
+        #just use python built-in date objects for these::
         self.dateReported = _dateReported #datetime.date
         self.dateOccurred = _dateOccurred #datetime.date
 
@@ -253,7 +253,7 @@ class LocationData():
     def getLocGroup(self):
         return self.__locationGroups;
 
-#JsontoIncident class uses a given (or default) date range to select an approprite set of month/year tagged JSON files to create
+#JsontoIncident class uses a given (or default) date range to select an appropriate set of month/year tagged JSON files to create
 #a list of incident objects
 class JsonToIncident:
     def __init__(self):
@@ -366,10 +366,11 @@ class IncidentToJson():
     def __init__(self):
         pass #currently takes no parameters but wanted to write functionality into class for extensibility purposes.
 
-    ##virtual for more trait-specific jsons being made
+    #virtual for more trait-specific jsons being made
     def extendFname(self, fname, extended):
         if (extended != "all"):
-            fname_spl = fname.split('.')
+            fname_spl = fname.split(".")
+            extended= extended.replace(" ", "-")
             fname = fname_spl[0] + "_" + extended + "." + fname_spl[1]
         return fname
 
@@ -595,7 +596,11 @@ def main():
     generateRangeSeperateMonths(cache, 1, 2016, 12, 2016, "all")
     generateRangeSeperateMonths(cache, 1, 2016, 12, 2016, "location")
     generateRangeSeperateMonths(cache, 1, 2016, 12, 2016, "incident_type")
-    #generateUpdatedJsonByMonth(cache, 2, 2016)
+
+    generateUpdatedJsonByMonth(cache, 12, 2016, "all")
+    generateUpdatedJsonByMonth(cache, 12, 2016, "location")
+    generateUpdatedJsonByMonth(cache, 12, 2016, "incident_type")
+
 
 
 if __name__ == "__main__":
