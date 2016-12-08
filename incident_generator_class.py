@@ -4,10 +4,11 @@
 import sys
 import json
 import os
-import pytest
-import db_initial
+#import pytest
+#import db_initial
 from datetime import date
 from datetime import time
+import calendar
 
 #class to hold location information within the Incident Class
 #initilization requires a location name (building or street) and the appropriate location grouping
@@ -81,7 +82,9 @@ class LocationData():
 class JsonToIncident:
     def __init__(self):
         self.__beginDate = date(date.today().year, date.today().month, 1)
-        self.__endDate = date(date.today().year, date.today().month, 30)
+        days_in_month = calendar.monthrange(date.today().year, date.today().month)
+        days_in_month = days_in_month[1]
+        self.__endDate = date(date.today().year, date.today().month, days_in_month)
 
         self.__locationData = LocationData()
         self.__jsonFiles = {(): ""}
@@ -102,15 +105,19 @@ class JsonToIncident:
 
         m = self.__beginDate.month
         y = self.__beginDate.year
-
+        #print(self.__jsonFiles)
         while (y <= date.today().year):
             timePair = (m, y)
+            print(str(self.__beginDate) + "\n")
+            print(str(self.__endDate) + "\n")
             if timePair in self.__jsonFiles:
-            	print self.__jsonFiles
-                with open(self.__jsonFiles[timePair]) as f:
+                with open("./pdfs/{fn}".format(fn = self.__jsonFiles[timePair])) as f:
+                    if (f == None):
+                        print("file not found\n")
+                        continue;
                     incid = json.load(f) #list of dictionaries containing json info
                 jsonDicList = jsonDicList + incid
-
+                print(jsonDicList)
             m = m+1
             if (m == 12):
                 m = 1
@@ -136,6 +143,9 @@ class JsonToIncident:
         i = 0
 
         while (i < len(incid)):
+            print(str(self.__beginDate) + "\n")
+            print(str(self.__endDate) + "\n")
+
             inc = incid[i]
             incDateOcc = inc["event #"].split("-")
             dateOccurred = date(2000 + int(incDateOcc[0]), int(incDateOcc[1]), int(incDateOcc[2]) )
@@ -182,7 +192,7 @@ class JsonToIncident:
         for d in self.__jsonFiles:
             if (d[1] > maxDate[1]):
                 maxDate = d
-            elif (d[1] == maxDate[1] and d[0] > miax_date[0]):
+            elif (d[1] == maxDate[1] and d[0] > max_date[0]):
                 maxDate = d
 
         self.__endDate = maxDate
@@ -199,9 +209,8 @@ class IncidentToJson():
         fileObj.write(jsonDocs)
 
     #creates JSON object for each incident object and writes to a JSON file whose name it returns
-    def createJson(self, incidents):
+    def createJson(self, incidents, fname):
 
-        fname = "incidents_.json"
         incidDicList = []
 
         with open(fname, "w") as jsonFile:
@@ -242,7 +251,7 @@ class IncidentCache:
             self.__beginDate = beginDate
             self.__endDate = endDate
             self.__fullyPopulateCache()
-        elif (_beginDate == self.__beginDate and _endDate == self.__endDate):
+        elif (beginDate == self.__beginDate and endDate == self.__endDate):
             #if new dates are identical to dates already assigned no work need be done
             return 0
         else:
@@ -270,14 +279,14 @@ class IncidentCache:
 
         #find and add to list incidents that took place before the current beginning date
         #but after/during the new benning date
-        if (newBegin < self.beginDate):
-            self.__jToI.setDateRange(newBegin, self.beginDate)
+        if (newBegin < self.__beginDate):
+            self.__jToI.setDateRange(newBegin, self.__beginDate)
             newIncidents = newIncidents + self.__jToI.createIncidents()
 
         #find and add to list incidents that took place after the current ending date
         #but before/during the new end date
-        if (newEnd > self.endDate):
-            self.__jToI.setDateRange(self.endDate, newEnd)
+        if (newEnd > self.__endDate):
+            self.__jToI.setDateRange(self.__endDate, newEnd)
             newIncidents = newIncidents + self.__jToI.createIncidents()
 
         self.__beginDate = newBegin
@@ -293,32 +302,50 @@ def testJsonSuccessfullyCreated(jsonOutputFile):
 
 #test to be sure that cache is not empty before trying to make json from its contents
 def testCachePopulated(cache):
-    #assert(len(cache.incidents) > 0)
+    assert(len(cache.incidents) > 0)
     print("help\n")
 
 
+def generateRangeSeperateMonths(cache, begin_month, begin_year, end_month, end_year):
+    ItoJ = IncidentToJson()
+
+    i_month = begin_month
+    i_year = begin_year
+
+    days_in_month = calendar.monthrange(i_year, i_month)[1];
+
+    while (i_month <= end_month and i_year <= end_year):
+        generateUpdatedJsonByMonth(cache, i_month, i_year)
+
+        i_month = i_month + 1
+        if (i_month > 12):
+            i_month = 0
+            i_year = i_year+1
+
+        #testJsonSuccessfullyCreated(jsonFname)
+        #return jsonFname
+
 #called by front end to create cache,  occupy, and create JSON for given month value
-def generateUpdatedJsonByMonth(month):
+def generateUpdatedJsonByMonth(cache, month, year):
 
     #db_initial.runDB()
+    cache.setCacheByDate(date(year, month, 1), date(year, month, calendar.monthrange(year, month)[1]))
 
-    cache = IncidentCache()
-    #cache.setJsonFiles({(11,2016): "NOV_16.json"})
-    cache.checkForMostRecentJsonFile(db_initial.filename())
-
-    r = cache.setCacheByDate(date(2016, month, 1), date(2016, month, 30))
     #testCachePopulated(cache)
 
-    print cache.incidents
     ItoJ = IncidentToJson()
-    jsonFname = ItoJ.createJson(cache.incidents)
+    fname = "incidents_" + str(month) + "_" + str(year) + ".json"
+    jsonFname = ItoJ.createJson(cache.incidents, fname)
     #testJsonSuccessfullyCreated(jsonFname)
 
     return jsonFname
 
-def run():
-    generateUpdatedJsonByMonth(12)
+def main():
+    cache = IncidentCache()
+    cache.setJsonFiles({(12,2016): "DEC_16.json", (11,2016): "NOV_16.json",(10,2016): "OCT_16.json",(9,2016): "SEP_16.json",(8,2016): "AUG_16.json",(7,2016): "JUL_16.json",(6,2016): "JUN_16.json",(5,2016): "MAY_16.json",(4,2016): "APR_16.json",(3,2016): "MAR_16.json",(2,2016): "FEB_16.json",(1,2016): "JAN_16.json"})
 
-# if __name__ == "__main__":
-#     run()
+    generateRangeSeperateMonths(cache, 1, 2016, 12, 2016)
+    #generateUpdatedJsonByMonth(cache, 2, 2016)
 
+if __name__ == "__main__":
+    main()

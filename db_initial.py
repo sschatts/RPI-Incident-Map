@@ -134,15 +134,15 @@ def createDatabase(fileName):
 def dumpJSON(fileName):
     f = open("./pdfs/{fn}.json".format(fn = fileName), "w+")
     #Gets a list of all of the posts that are in the database. Each post is an incident.
-        docsList = list(__posts.find())
-        #print docsList
-        print fileName
-        #Creates a dump of the posts.
-        jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(",", ": "))
-        #Writes the dumps to a JSON file
-        f.write(jsonDocs)
-        f.close()
-        return 0
+    docsList = list(__posts.find())
+    #print docsList
+    print fileName
+    #Creates a dump of the posts.
+    jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(",", ": "))
+    #Writes the dumps to a JSON file
+    f.write(jsonDocs)
+    f.close()
+    return 0
 
 #Returns the filename of the JSON created in the function above along with the month and year in number, number tuple. Needed for part of Kit's code.
 def filename():
