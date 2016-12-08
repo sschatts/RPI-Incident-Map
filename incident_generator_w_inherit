@@ -191,7 +191,7 @@ class Location:
 
 class IncidentData:
 	def __init__(self):
-		self.__categories = ["Mischief"," Fire Alarm", "Medical Incident", "Intoxication","Property Damage","Larceny and Assault"]
+		self.__categories = ["Mischief","Fire Alarm", "Medical Incident", "Intoxication","Property Damage","Larceny and Assault", "Other"]
 
 	def getCat(self, description):
 		descCategory = ""
@@ -204,7 +204,9 @@ class IncidentData:
 		
 		#if no description matches, use other
 		if (descCategory == ""):
-			descCategory == "Other"
+			#print("in other")
+			descCategory = "Other"
+		#print(descCategory)
 		return descCategory
 	
 	def getCategories(self):
@@ -321,7 +323,8 @@ class JsonToIncident:
 
 				loc = Location(inc["location"], self.__assignLocationGroup(inc["location"]))
 				event =  self.__incidentData.getCat(inc["incident"])
-
+				#print("event:" +event)
+				
 				loc.setCoords(inc["coordinates"][0], inc["coordinates"][1])
 				inc_obj = Incident(inc["event #"], event, loc, dateOccurred, dateReported)
 
@@ -390,9 +393,9 @@ class IncidentToJson():
 			for incid in incidents:
 				#create dictionary out of incident object as intermediate step in making JSON object
 				#checks for locaiton group to make pins for
-				incid_dic = self.__incidToDic(incid)
+				incid_dic = self.incidToDic(incid)
 				incidDicList.append(incid_dic)
-			self.__dumpJSON(jsonFile, incidDicList)
+			self.dumpJSON(jsonFile, incidDicList)
 		jsonFile.close()
 
 		return fname
@@ -576,6 +579,7 @@ def generateUpdatedJsonByMonth(cache, month, year, extra_parameters=""):
 	elif (extra_parameters == "incident_type"):
 		in_type = IncidentData().getCategories()
 		for it in in_type:
+			
 			jsonFname = createJsonMaker("incident_type").createJson(cache.incidents, fname, it)	
 	else:
 		jsonFname = createJsonMaker("").createJson(cache.incidents, fname)
@@ -587,7 +591,8 @@ def main():
 	cache = IncidentCache()
 	cache.setJsonFiles({(12,2016): "DEC_16.json", (11,2016): "NOV_16.json",(10,2016): "OCT_16.json",(9,2016): "SEP_16.json",(8,2016): "AUG_16.json",(7,2016): "JUL_16.json",(6,2016): "JUN_16.json",(5,2016): "MAY_16.json",(4,2016): "APR_16.json",(3,2016): "MAR_16.json",(2,2016): "FEB_16.json",(1,2016): "JAN_16.json"})
 
-	generateRangeSeperateMonths(cache, 1, 2016, 12, 2016, "incident_type")
+	##call using "location", "incident", or "all"
+	generateRangeSeperateMonths(cache, 1, 2016, 12, 2016, "location")
 	#generateUpdatedJsonByMonth(cache, 2, 2016)
 
 
