@@ -41,7 +41,7 @@
 	var jsonObjects = [];
 	$.ajax({
 		async: false,
-		url: 'incidents.json',
+		url: 'incidents_.json',
 		data: "",
 		accepts:'application/json',
 		dataType: 'json',
@@ -53,31 +53,11 @@
 	});
 	
 	//initialize layergroups and arrays
-	var rpiMarkers = [];
-	var northMarkers = [];
-	var southMarkers = [];
-	var eastMarkers = [];
-	var westMarkers = [];
 	var allMarkers = [];
 	
 	//popuplate jsonObjects
 	for (var j = 0; j < jsonObjects.length; j++){
-		allMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		if (jsonObjects[j]['location group'] == 'RPI'){
-			rpiMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		}
-		else if (jsonObjects[j]['location group'] == 'North'){
-			northMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		}
-		else if (jsonObjects[j]['location group'] == 'South'){
-			southMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		}
-		else if (jsonObjects[j]['location group'] == 'East'){
-			eastMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		}
-		else if (jsonObjects[j]['location group'] == 'West'){
-			westMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incident_type])
-		}
+		allMarkers.push([jsonObjects[j].latitude, jsonObjects[j].longitude, jsonObjects[j].incidentType])
 	}
 	console.log(jsonObjects.length)
 	
@@ -136,10 +116,7 @@
 		console.log(marker.desc)
 		map.openPopup(popup);
 	});
-	oms.addListener('spiderfy', function(markers) {
-		//for (var i = 0, len = markers.length; i < len; i ++) markers[i].setIcon(new lightIcon());
-		map.closePopup();
-	});
+
 	//for loops for adding markers to the map
 	for (var i=0; i<allMarkers.length; i++) {
 		var lat = allMarkers[i][0];
