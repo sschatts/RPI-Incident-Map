@@ -136,7 +136,7 @@ def dumpJSON(fileName):
     #Gets a list of all of the posts that are in the database. Each post is an incident.
     docsList = list(__posts.find())
     #print docsList
-    print fileName
+    #print fileName
     #Creates a dump of the posts.
     jsonDocs = json.dumps(docsList, default=json_util.default, indent=4, separators=(",", ": "))
     #Writes the dumps to a JSON file
